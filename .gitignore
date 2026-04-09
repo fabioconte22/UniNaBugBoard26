@@ -1,1 +1,13 @@
+# Mac
 .DS_Store
+
+# Maven e file compilati
+target/
+*.class
+*.jar
+*.war
+
+# File dell'ambiente di sviluppo (IDE)
+.idea/
+*.iml
+.vscode/
