@@ -13,4 +13,4 @@ target/
 .vscode/
 
 # File con dati sensibili 
-/application.yml
+**/application.yml
