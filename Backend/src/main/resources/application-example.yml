@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: bugboard26
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/bugboard26
+    username: INSERISCI_USERNAME
+    password: INSERISCI_PASSWORD
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: INSERISCI_SECRET_MIN_32_CARATTERI
+  expiration-ms: 86400000
+
+server:
+  port: 8080
