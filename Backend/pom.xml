@@ -49,6 +49,12 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- 4. Sicurezza e JWT-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
         <!-- 4. Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
