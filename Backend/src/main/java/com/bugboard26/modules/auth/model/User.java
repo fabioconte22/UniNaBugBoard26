@@ -1,14 +1,16 @@
 package com.bugboard26.modules.auth.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter 
+@Setter 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
