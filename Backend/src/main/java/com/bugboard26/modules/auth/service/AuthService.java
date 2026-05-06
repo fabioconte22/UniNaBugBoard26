@@ -6,9 +6,14 @@ import com.bugboard26.modules.auth.dto.RegisterRequest;
 import com.bugboard26.modules.auth.model.Role;
 import com.bugboard26.modules.auth.model.User;
 import com.bugboard26.modules.auth.repository.UserRepository;
+import com.bugboard26.shared.exception.EmailAlreadyExistsException;
+import com.bugboard26.shared.exception.InvalidCredentialException;
+import com.bugboard26.shared.exception.UserNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +28,11 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+
+        if(userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+
         User user = User.builder()
         .nome(request.getNome())
         .cognome(request.getCognome())
@@ -38,18 +48,21 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-            request.getEmail(),
-        request.getPassword()
-            )
-        );
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+                )
+            );
+        } catch (AuthenticationException e) {
+            throw new InvalidCredentialException();
+        }
 
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException(request.getEmail()));
         
-        String token = jwtService.generateToken(user.getEmail());
-        return new AuthResponse(token);    
+        return new AuthResponse(jwtService.generateToken(user.getEmail()));    
     
     }
     
