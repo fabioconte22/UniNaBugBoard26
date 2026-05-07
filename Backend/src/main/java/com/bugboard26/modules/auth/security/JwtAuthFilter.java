@@ -23,7 +23,6 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserDetailsService userDetailsService; 
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -40,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             final String token = authHeader.substring(7);
             final String email = jwtService.extractEmail(token); 
-            final String role = jwtService.extractRole(token)
+            final String role = jwtService.extractRole(token);
 
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -49,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(
                                 email,
                                 null,
-                                List.of(new SimpleGrantedAuthority("ROLE_ " + role))
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
                             );
                     authToken.setDetails(
                             new WebAuthenticationDetailsSource().buildDetails(request)
