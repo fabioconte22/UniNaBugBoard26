@@ -35,7 +35,7 @@ public class Issue {
     private IssuePriority priority;
 
     @Column(nullable = false) 
-    private String creatoreEmail;
+    private String creatorEmail;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

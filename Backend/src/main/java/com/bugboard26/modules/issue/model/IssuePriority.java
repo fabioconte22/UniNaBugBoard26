@@ -1,5 +1,8 @@
 package com.bugboard26.modules.issue.model;
 
-public class IssuePriority {
-    
+public enum IssuePriority {
+    LOW, 
+    MEDIUM, 
+    HIGH,
+    CRITICAL
 }
