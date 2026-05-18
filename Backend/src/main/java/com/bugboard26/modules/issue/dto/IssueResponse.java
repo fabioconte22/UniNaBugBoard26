@@ -15,7 +15,7 @@ public class IssueResponse {
     private String descrizione;
     private IssueType type;
     private IssueStatus status;
-    private IssuePriority prioroty;
+    private IssuePriority priority;
     private String creatorEmail;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 }

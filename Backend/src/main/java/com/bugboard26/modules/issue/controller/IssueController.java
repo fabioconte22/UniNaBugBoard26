@@ -4,6 +4,7 @@ import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.service.IssueService;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -22,21 +23,21 @@ public class IssueController {
 
     @PostMapping
     public ResponseEntity<IssueResponse> createIssue(
-            @RequestBody CreateIssueRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        IssueResponse response = issueService.createIssue(request, userDetails.getUsername());
+            @Valid @RequestBody CreateIssueRequest request,
+            @AuthenticationPrincipal String email ) {
+        IssueResponse response = issueService.createIssue(request, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<IssueResponse>> getMyIssues() {
+    public ResponseEntity<List<IssueResponse>> getAllIssues() {
             return ResponseEntity.ok(issueService.getAllIssues());
     }
 
     @GetMapping("/me")
     public ResponseEntity<List<IssueResponse>> getMyIssues(
-            @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(issueService.getMyIssues(userDetails.getUsername()));
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(issueService.getMyIssues(email));
     }
 
 }

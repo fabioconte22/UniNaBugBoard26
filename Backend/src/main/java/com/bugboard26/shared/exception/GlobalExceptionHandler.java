@@ -5,8 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -34,6 +37,17 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Risorsa non trovata. Controlla l' URL della richiesta.");
     }
 
+    @ExceptionHandler(IssueNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleIssueNotFound(IssueNotFoundException ex){
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = extractValidationErrors(ex);
+        return builResponseWithDetails(HttpStatus.BAD_REQUEST, "Dati inviati non validi", errors);
+    }
+
     //Cattura qualsiasi altra eccezione non prevista 
     @ExceptionHandler(Exception.class) 
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
@@ -43,13 +57,31 @@ public class GlobalExceptionHandler {
     private ResponseEntity<Map<String, Object>> buildResponse(
             HttpStatus status, String message) {
         return ResponseEntity.status(status).body(Map.of(
-                "timestamp", LocalDateTime.now().toString(),
+                "timestamp", Instant.now().toString(),
                 "status", status.value(),
                 "error", status.getReasonPhrase(),
                 "message", message
         ));
     }
 
+    private ResponseEntity<Map<String, Object>> builResponseWithDetails(
+            HttpStatus status, String message, Map<String, String> details) {
 
-    
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", Instant.now().toString());
+        body.put("status", status.value());
+        body.put("error", status.getReasonPhrase());
+        body.put("message", message);
+        body.put("details", details);
+
+        return ResponseEntity.status(status).body(body);
+    }
+
+    private Map<String, String> extractValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> 
+            errors.put(error.getField(), error.getDefaultMessage())
+        );
+        return errors;
+    }
 }

@@ -2,7 +2,12 @@ package com.bugboard26.modules.issue.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+
+import java.time.Instant;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "issues")
@@ -11,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Issue {
     
     @Id
@@ -37,25 +43,12 @@ public class Issue {
     @Column(nullable = false) 
     private String creatorEmail;
 
+    @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
+    @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUptade() {
-        updatedAt = LocalDateTime.now();
-    }
-
-
+    private Instant updatedAt;
     
 }
