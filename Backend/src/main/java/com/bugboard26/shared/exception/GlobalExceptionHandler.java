@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = extractValidationErrors(ex);
-        return builResponseWithDetails(HttpStatus.BAD_REQUEST, "Dati inviati non validi", errors);
+        return buildResponseWithDetails(HttpStatus.BAD_REQUEST, "Dati inviati non validi", errors);
     }
 
     //Cattura qualsiasi altra eccezione non prevista 
@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
         ));
     }
 
-    private ResponseEntity<Map<String, Object>> builResponseWithDetails(
+    private ResponseEntity<Map<String, Object>> buildResponseWithDetails(
             HttpStatus status, String message, Map<String, String> details) {
 
         Map<String, Object> body = new LinkedHashMap<>();

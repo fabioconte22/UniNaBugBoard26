@@ -29,6 +29,9 @@ public class Issue {
     @Column(nullable = false, length = 2000)
     private String descrizione;
 
+    @Column(length = 500)
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private IssueType type;

@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,5 +39,15 @@ public class IssueController {
             @AuthenticationPrincipal String email) {
         return ResponseEntity.ok(issueService.getMyIssues(email));
     }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<IssueResponse> uploadImage(
+        @PathVariable String id,
+        @RequestParam("file") MultipartFile file, 
+        @AuthenticationPrincipal String email) {
+
+            IssueResponse response = issueService.uploadIssueImage(id, file, email);
+            return ResponseEntity.ok(response);
+        }
 
 }
