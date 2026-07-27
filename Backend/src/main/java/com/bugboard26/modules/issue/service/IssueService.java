@@ -8,6 +8,7 @@ import com.bugboard26.modules.issue.model.IssueStatus;
 import com.bugboard26.modules.issue.model.IssueType;
 import com.bugboard26.modules.issue.repository.IssueRepository;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
+import com.bugboard26.shared.exception.IssueAccessDeniedException;
 import com.bugboard26.shared.exception.IssueNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,12 +43,6 @@ public class IssueService {
         return toResponse(saved);
     }
 
-    public List<IssueResponse> getAllIssues() {
-        return issueRepository.findAll().stream()
-        .map(this::toResponse)
-        .collect(Collectors.toList());
-    }
-
     public List<IssueResponse> getMyIssues(String creatorEmail) {
         return issueRepository.findByCreatorEmail(creatorEmail)
             .stream()
@@ -74,7 +69,7 @@ public class IssueService {
                 .orElseThrow(() -> new IssueNotFoundException(issueId));
 
         if(!issue.getCreatorEmail().equals(email)) {
-            throw new RuntimeException("Non sei autorizzato ad allegare immagini a questa issue!");
+            throw new IssueAccessDeniedException();
         }
 
         String imageUrl = fileStorageService.uploadImage(file);

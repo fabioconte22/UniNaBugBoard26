@@ -42,10 +42,20 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    @ExceptionHandler(IssueAccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleIssueAccesDanied(IssueAccessDeniedException ex) {
+        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = extractValidationErrors(ex);
         return buildResponseWithDetails(HttpStatus.BAD_REQUEST, "Dati inviati non validi", errors);
+    }
+
+    @ExceptionHandler(InvalidFilterParameterException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidFilterParameterException(InvalidFilterParameterException ex) {
+      return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     //Cattura qualsiasi altra eccezione non prevista 
@@ -53,6 +63,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Errore interno del server");
     }
+
 
     private ResponseEntity<Map<String, Object>> buildResponse(
             HttpStatus status, String message) {

@@ -1,9 +1,9 @@
 package com.bugboard26.modules.auth.service;
 
 import com.bugboard26.modules.auth.dto.AuthResponse;
+import com.bugboard26.modules.auth.dto.CreateUserRequest;
 import com.bugboard26.modules.auth.dto.LoginRequest;
-import com.bugboard26.modules.auth.dto.RegisterRequest;
-import com.bugboard26.modules.auth.model.Role;
+import com.bugboard26.modules.auth.dto.UserResponse;
 import com.bugboard26.modules.auth.model.User;
 import com.bugboard26.modules.auth.repository.UserRepository;
 import com.bugboard26.shared.exception.EmailAlreadyExistsException;
@@ -27,7 +27,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse register(RegisterRequest request) {
+    public UserResponse createUser(CreateUserRequest request) {
 
         if(userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new EmailAlreadyExistsException(request.getEmail());
@@ -38,13 +38,12 @@ public class AuthService {
         .cognome(request.getCognome())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
-        .role(Role.USER)
+        .role(request.getRole())
         .build();
 
-        userRepository.save(user);
+        User saved = userRepository.save(user);
 
-        String token = jwtService.generateToken(user.getEmail(), user.getRole());
-        return new AuthResponse(token);
+        return new UserResponse(saved.getId(), saved.getNome(), saved.getCognome(), saved.getEmail(), saved.getRole());
     }
 
     public AuthResponse login(LoginRequest request) {
