@@ -60,4 +60,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         # Il comando esegue i test e invia il report a SonarQube
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=fabioconte22_UniNaBugBoard26
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=fabioconte22_UniNaBugBoard26 -Dsonar.organization=fabioconte22 -Dsonar.host.url=https://sonarcloud.io
