@@ -64,5 +64,11 @@ public class AuthService {
         return new AuthResponse(jwtService.generateToken(user.getEmail(), user.getRole()));    
     
     }
+
+    public void ensureUserExists(String email) {
+        if(userRepository.findByEmail(email).isEmpty()) {
+            throw new UserNotFoundException(email);
+        }
+    }
     
 }

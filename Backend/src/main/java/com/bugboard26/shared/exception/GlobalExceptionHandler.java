@@ -2,6 +2,7 @@ package com.bugboard26.shared.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -56,6 +57,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFilterParameterException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidFilterParameterException(InvalidFilterParameterException ex) {
       return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> hendleMalformedJson(HttpMessageNotReadableException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Il corpo della richiesta non è valido.");
+    }
+
+    @ExceptionHandler(InvalidIssueTypeForAssignmentException.class)
+    public ResponseEntity<Map<String,Object>> hendleInvalidIssueTypeForAssignment(InvalidIssueTypeForAssignmentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     //Cattura qualsiasi altra eccezione non prevista 

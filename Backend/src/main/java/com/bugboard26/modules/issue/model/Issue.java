@@ -46,6 +46,9 @@ public class Issue {
     @Column(nullable = false) 
     private String creatorEmail;
 
+    @Column
+    private String assigneeEmail;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

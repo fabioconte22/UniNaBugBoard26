@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface IssueRepository extends JpaRepository<Issue, String>, JpaSpecificationExecutor<Issue> {
     List<Issue> findByCreatorEmail(String creatorEmail);
+    List<Issue> findByAssigneeEmail(String assigneeEmail);
     
 }

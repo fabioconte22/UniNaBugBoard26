@@ -19,5 +19,6 @@ public class IssueResponse {
     private IssueStatus status;
     private IssuePriority priority;
     private String creatorEmail;
+    private String assigneeEmail; 
     private Instant createdAt;
 }

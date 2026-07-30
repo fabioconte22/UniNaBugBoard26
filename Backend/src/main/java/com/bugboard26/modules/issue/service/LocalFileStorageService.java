@@ -37,7 +37,7 @@ public class LocalFileStorageService implements FileStorageService {
             Path destinationPath = this.uploadDirectory.resolve(uniqueFilename).normalize().toAbsolutePath();
             Files.copy(file.getInputStream(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
             
-            return "/upload/issues/" + uniqueFilename; 
+            return "/uploads/issues/" + uniqueFilename;
 
         } catch(IOException e) {
             throw new RuntimeException("Errore durante il salvataggio del file!", e);
