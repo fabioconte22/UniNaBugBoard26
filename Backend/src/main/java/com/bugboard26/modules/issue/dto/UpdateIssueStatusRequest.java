@@ -9,5 +9,4 @@ import lombok.Setter;
 public class UpdateIssueStatusRequest {
     @NotBlank(message = "Lo stato è obbligatorio")
     private String status; 
-    
-}
+    }
