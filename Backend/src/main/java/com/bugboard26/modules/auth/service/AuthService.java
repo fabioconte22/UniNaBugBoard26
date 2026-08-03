@@ -43,7 +43,7 @@ public class AuthService {
 
         User saved = userRepository.save(user);
 
-        return new UserResponse(saved.getId(), saved.getNome(), saved.getCognome(), saved.getEmail(), saved.getRole());
+        return toResponse(saved);
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -69,6 +69,17 @@ public class AuthService {
         if(userRepository.findByEmail(email).isEmpty()) {
             throw new UserNotFoundException(email);
         }
+    }
+
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException(email));
+        
+        return toResponse(user);
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(user.getId(), user.getNome(), user.getCognome(), user.getEmail(), user.getRole());
     }
     
 }
