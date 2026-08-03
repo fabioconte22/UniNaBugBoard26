@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateIssueStatusRequest {
-    @NotBlank(message = "Lo stato è obbligatorio")
-    private String status; 
-    }
+public class CreateCommentRequest {
+    @NotBlank(message = "Il contenuto del commento è obbligatorio")
+    private String content;
+}
+

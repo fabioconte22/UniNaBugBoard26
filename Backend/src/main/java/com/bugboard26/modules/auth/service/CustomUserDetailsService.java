@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                     "Utente non trovato con email: " + email
                 ));
-            }
+    }
 
     
 }

@@ -1,11 +1,12 @@
 package com.bugboard26.modules.auth.controller;
 
-import com.bugboard26.modules.auth.dto.AuthResponse;
-import com.bugboard26.modules.auth.dto.LoginRequest;
+import com.bugboard26.modules.auth.dto.CreateUserRequest;
+import com.bugboard26.modules.auth.dto.UserResponse;
 import com.bugboard26.modules.auth.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,16 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
-public class AuthController {
+public class AdminUserController {
 
     private final AuthService authService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+        UserResponse response = authService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 }

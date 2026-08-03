@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/bugboard26
+    username: bugboard
+    password: secret
+  jpa:
+    hibernate:
+      ddl-auto: create-drop 
+
+jwt:
+  secret: chiave-segreta-di-test-molto-lunga-minimo-32-caratteri
+  expiration-ms: 3600000

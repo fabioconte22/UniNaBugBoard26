@@ -1,7 +1,9 @@
 package com.bugboard26.modules.auth.service;
 
+import com.bugboard26.modules.auth.model.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,9 +20,10 @@ public class JwtService {
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
 
-    public String generateToken(String email) {
+    public String generateToken(String email,Role role ) {
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role.name())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey())
@@ -29,6 +32,10 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return extractClaims(token).getSubject();
+    }
+
+    public String extractRole(String token) {
+        return extractClaims(token).get("role", String.class);
     }
 
     public boolean isTokenValid(String token, String email) {
@@ -48,7 +55,8 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 
