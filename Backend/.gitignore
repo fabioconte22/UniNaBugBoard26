@@ -1,0 +1,19 @@
+# ---------------------------------------------------------------------------
+# Modulo backend: Maven / Java / Spring Boot.
+# Le regole trasversali (sistema operativo, IDE) stanno nel .gitignore alla
+# radice del repository.
+# ---------------------------------------------------------------------------
+
+# Output di compilazione
+target/
+*.class
+*.jar
+*.war
+
+# Configurazione locale con dati sensibili: password del database e JWT secret.
+# La regola è volutamente esatta, così un eventuale application.yml.example
+# con valori fittizi resta tracciabile e documenta le chiavi obbligatorie.
+application.yml
+
+# Allegati caricati dagli utenti a runtime
+uploads/

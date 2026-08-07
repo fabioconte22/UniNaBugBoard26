@@ -1,0 +1,51 @@
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow-sm" style="width: 100%; max-width: 26rem">
+        <div class="card-body p-4">
+            <h1 class="h4 mb-1">BugBoard26</h1>
+            <p class="text-body-secondary mb-4">Accedi per continuare.</p>
+
+            @if(errorMessage(); as message) {
+                <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
+            }
+
+            <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        class="form-control"
+                        formControlName="email"
+                        autocomplete="username"
+                        [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+                    />
+                    @if (form.controls.email.touched && form.controls.email.invalid) {
+                        <div class="invalid-feedback">Inserisci un'email valida.</div>
+                    }
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label">Password</label>
+                    <input 
+                        id="password"
+                        type="password"
+                        class="form-control"
+                        formControlName="password"
+                        autocomplete="current-password"
+                        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+                    />
+                    @if (form.controls.password.touched && form.controls.password.invalid) {
+                        <div class="invalid-feedback">La password è obbligatoria.</div>
+                    }
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100" [disabled]="loading()">
+                    @if (loading()){
+                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                    }
+                    Accedi
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

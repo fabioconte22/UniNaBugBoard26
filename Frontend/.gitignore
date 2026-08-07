@@ -1,0 +1,25 @@
+# ---------------------------------------------------------------------------
+# Modulo frontend: Node / Angular.
+# Le regole trasversali (sistema operativo, IDE, incluso .vscode/) stanno nel
+# .gitignore alla radice del repository.
+# ---------------------------------------------------------------------------
+
+# Dipendenze installate da npm
+/node_modules
+
+# Output di build
+/dist
+/out-tsc
+/tmp
+
+# Cache del compilatore Angular e del preprocessore Sass
+/.angular/cache
+.sass-cache/
+
+# Report dei test
+/coverage
+__screenshots__/
+
+# Log dei package manager
+npm-debug.log*
+yarn-error.log*

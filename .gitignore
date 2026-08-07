@@ -1,19 +1,20 @@
-# Mac
+# ---------------------------------------------------------------------------
+# Regole trasversali all'intero repository.
+#
+# Tutto ciò che riguarda un singolo modulo sta nel .gitignore del modulo:
+#   Backend/.gitignore   -> Maven / Java / Spring Boot
+#   Frontend/.gitignore  -> Node / Angular
+#
+# Qui restano solo le cose che non appartengono a nessun modulo in particolare.
+# ---------------------------------------------------------------------------
+
+# File generati dal sistema operativo
 .DS_Store
+Thumbs.db
 
-# Maven e file compilati
-target/
-*.class
-*.jar
-*.war
-
-# File dell'ambiente di sviluppo (IDE)
+# Ambiente di sviluppo (IDE ed editor)
 .idea/
 *.iml
 .vscode/
-
-# File con dati sensibili 
-**/application.yml
-
-# Ignora le cartelle con i file generati a runtime
-uploads/
+.history/
+*.swp

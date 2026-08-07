@@ -1,0 +1,8 @@
+// Bootstrap: importato dai sorgenti SCSS (non dal CSS compilato) così da poter
+// sovrascrivere le variabili del tema prima dell'import quando servirà.
+@use 'bootstrap/scss/bootstrap';
+
+html,
+body {
+  height: 100%;
+}
