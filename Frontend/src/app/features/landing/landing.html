@@ -1,0 +1,74 @@
+<main class ="container py-5">
+    <section class="text-center mx-auto" style="max-width: 46rem;">
+        <img
+            src="logo.png"
+            alt="Logo di BugBoard26"
+            width="160"
+            height="160"
+            class="mb-4"
+        />
+
+        <h1 class="display-5 fw-semibold mb-3">BugBoard26</h1>
+
+        <p class="lead text-body-secondary mb-4">
+            Il sistema per segnalare, assegnare e seguire fino alla chiusura i bug di un progetto software, con 
+            un flusso di lavoro condiviso fra chi le segnalazioni le apre e chi le risolve.
+        </p>
+
+        @if (auth.isAuthenticated()) {
+            <a class="btn btn-primary btn-lg px-4" routerLink="/dashboard">
+                Vai alla dashboard
+            </a>
+        } @else {
+            <a class="btn btn-primary btn-lg px-4" routerLink="/login">Accedi</a>
+
+            <p class="small text-body-secondary mt-3 mb-0">
+                Non è prevista la registrazione: gli account vengono creati dall'amministratore.
+            </p>
+        }
+    </section>
+
+    <section class="row g-4 mt-5">
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Segnala</h2>
+                    <p class="card-text text-body-secondary mb-0">
+                        Apri una segnalazione con titolo, descrizione e priorità, 
+                        così che il problema resti tracciato e non si perda.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Assegna e traccia</h2>
+                    <p class="card-text text-body-secondary mb-0">
+                        Ogni segnalazione ha un responsabile e uno stato che ne racconta l'avanzamento, 
+                        dall'apertura alla chiusura.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Ruoli distinti</h2>
+                    <p class="card-text text-body-secondary mb-0">
+                       Chi usa il sistema segue le proprie segnalazioni; 
+                       l'amministratore gestisce utenti e assegnazioni.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center text-body-secondary small mt-5 pt-4 border-top">
+        <p>Progetto universitario - Università degli studi di Napoli Federico II</p>
+        <p>Copyright © 2026. Tutti i diritti riservati.</p>
+
+    </footer>
+</main>

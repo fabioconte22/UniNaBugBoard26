@@ -36,7 +36,7 @@ export class Login{
         this.auth.login(this.form.getRawValue()).subscribe({
             next: () => {
                 const redirectTo = this.route.snapshot.queryParamMap.get('redirectTo');
-                this.router.navigateByUrl(redirectTo ?? '/home');
+                this.router.navigateByUrl(redirectTo ?? '/dashboard');
             },
             error: (error: HttpErrorResponse) => {
                 this.loading.set(false);

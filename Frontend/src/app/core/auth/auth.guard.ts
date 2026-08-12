@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = (_route, state) => {
 
     return(
         auth.isAuthenticated() || 
-        router.createUrlTree(['/login'], { queryParams: { redirectdTo: state.url } })
+        router.createUrlTree(['/login'], { queryParams: { redirectTo: state.url } })
     );
 };
 
@@ -17,13 +17,13 @@ export const adminGuard: CanActivateFn = () => {
     const router = inject(Router); 
 
     if(auth.isAdmin()) return true; 
-    return router.createUrlTree([auth.isAuthenticated() ? '/home' : '/login']); 
+    return router.createUrlTree([auth.isAuthenticated() ? '/dashboard' : '/']); 
 };
 
 export const guestGuard: CanActivateFn = () => {
     const auth = inject(AuthService);
     const router = inject(Router); 
 
-    return auth.isAuthenticated() ? router.createUrlTree(['/home']) : true; 
+    return auth.isAuthenticated() ? router.createUrlTree(['/dashboard']) : true; 
 };
 
