@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
-    selector: 'app-home', 
+    selector: 'app-dashboard', 
     template: `
         <div class="container py-5">
             <h1 class="h3">Ciao {{ auth.user()?.nome }}</h1>
@@ -14,12 +14,12 @@ import { AuthService } from '../../core/auth/auth.service';
         </div>
     `,
 })
-export class Home {
+export class Dashboard {
     private readonly router = inject(Router);
     protected readonly auth = inject(AuthService); 
 
     protected logout(): void {
         this.auth.logout();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
     }
 }
