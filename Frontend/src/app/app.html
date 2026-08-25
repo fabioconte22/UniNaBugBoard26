@@ -1,1 +1,57 @@
+@if (auth.isAuthenticated()) {
+    <nav class="navbar navbar-expand-md bg-body-tertiary border-botton">
+        <div class="container">
+            <a 
+                class="navbar-brand d-flex align-items-center gap-2"
+                routerLink="/dashboard"
+                (click)="closeMenu()"
+            >
+                <img src="logo.png" alt="" width="32" height="32" />
+                <span class="fw-semibold">BugBoard26</span>
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                aria-controls="menu-principale"
+                aria-label="Apri il menu"
+                [attr.aria-expanded]="menuOpen()"
+                (click)="toggleMenu()"
+            >
+                <span class="navbar-toggler-icon"></span>    
+            </button>
+
+            <div
+                id="menu-principale"
+                class="collapse navbar-collapse"
+                [class.show]="menuOpen()"
+            >
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            routerLink="/dashboard"
+                            routerLinkActive="active"
+                            (click)="closeMenu()"
+                        >
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 py-2 py-md-0">
+                    <span class="text-body-secondary small">
+                        {{ auth.user()?.nome }}
+                        <span class="badge text-bg-secondary ms-1">{{ auth.user()?.role}}</span>
+                    </span>
+
+                    <button class="btn btn-sm btn-outline-secondary" (click)="logout()">
+                        Esci
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+}
+
 <router-outlet />
