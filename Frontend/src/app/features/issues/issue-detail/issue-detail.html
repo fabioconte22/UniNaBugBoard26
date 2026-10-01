@@ -1,0 +1,44 @@
+<div class="container py-4">
+    <a class="btn btn-link px-0 mb-3" routerLink="/issues">← Torna all'elenco </a>
+    @if (loading()) {
+        <div class="d-flex align-items-center gap-2 text-body-secondary py-5">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            Caricamento in corso...
+        </div>
+    } @else if (errorMessage(); as message) {
+        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+            <span>{{ message }}</span>
+            <button class="btn btn-sm btn-outline-danger"
+            (click)="load()">Riprova</button>
+        </div>
+    } @else if (issue(); as item) {
+        <h1 class="h3">{{ item.titolo }}</h1>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
+            <span [class]="'badge ' + priorityBadge[item.priority]">{{ priorityLabels[item.priority] }}</span>
+            <span class="badge text-bg-light border">{{ typeLabels[item.type] }}</span>
+        </div>
+
+        <p class="mb-4" style="white-space: pre-wrap">{{ item.descrizione }}</p>
+
+        @if (item.imageUrl) {
+            <img 
+                [src]="item.imageUrl"
+                [alt]="'Allegato della issue ' + item.titolo"
+                class="mg-fluid rounded border mb-4"
+            />
+        }
+
+        <dl class="row small text-body-secondary mb-0">
+            <dt class="col-sm-3">Creata da</dt>
+            <dd class="col-sm-9">{{ item.creatorEmail }}</dd>
+            
+            <dt class="col-sm-3">Assegnata a</dt>
+            <dd class="col-sm-9">{{ item.assigneeEmail ?? 'Non assegnata' }}</dd>
+
+            <dt class="col-sm-3">Creata il</dt>
+            <dd class="col-sm-9">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        </dl>
+    }
+</div>

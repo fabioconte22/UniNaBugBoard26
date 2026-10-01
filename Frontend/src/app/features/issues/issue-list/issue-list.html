@@ -1,0 +1,136 @@
+<div class="container py-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+        <h1 class="h3 mb-0">Issues</h1>
+
+        @if (!loading() && !errorMessage()) {
+            <span class="text-body-secondary small">{{ totalElements() }} in totale</span>
+        }
+    </div>
+
+    <div class="row g-2 mb-4">
+        <div class="col-12 col-md-4">
+            <label class="form-label small text-body-secondary" for="filro-stato">Stato</label>
+            <select
+                id="filtro-stato"
+                #selectStato
+                class="form-select"
+                (change)="onFilterChange('status', selectStato.value)"
+            >
+                <option value="">Tutti</option>
+                @for (voce of statusOptions; track voce) {
+                    <option [value]="voce">{{ statusLabels[voce] }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <label class="form-label small text-body-secondary" for="filtro-tipo">Tipo</label>
+            <select
+                id="filtro-tipo"
+                #selectTipo
+                class="form-select"
+                (change)="onFilterChange('type', selectTipo.value)"
+            >
+                <option value="">Tutti</option>
+                @for(voce of typeOptions; track voce) {
+                    <option [value]="voce">{{ typeLabels[voce] }}</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <label class="form-label small text-body-secondary" for="filtro-priorita">Priorità</label>
+            <select
+                id="filtro-priorita"
+                #selectPriorita
+                class="form-select"
+                (change)="onFilterChange('priority', selectPriorita.value)"
+            >
+                <option value="">Tutte</option>
+                @for (voce of priorityOptions; track voce) {
+                    <option [value]="voce">{{ priorityLabels[voce] }}</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    @if(loading()) {
+        <div class="d-flex align-items-center gap-2 text-body-secondary py-5">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            Caricamento in corso...
+        </div>
+    } @else if (errorMessage(); as message) {
+        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+            <span>{{ message }}</span>
+            <button class="btn btn-sm btn-outline-danger"
+            (click)="load()">Riprova</button>
+        </div>
+    } @else if (issues().length === 0) {
+        <p class="text-center text-body-secondary py-5 mb-0">
+            Nessuna issue corrisponde ai filtri selezionati
+        </p>
+    } @else {
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">Titolo</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Stato</th>
+                        <th scope="col">Priorità</th>
+                        <th scope="col">Creata da</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (issue of issues(); track issue.id) {
+                        <tr>
+                            <td><a [routerLink]="['/issues', issue.id]">{{ issue.titolo }}</a></td>
+                            <td>{{ typeLabels[issue.type] }}</td>
+                            <td>
+                                <span [class]="'badge ' + statusBadge[issue.status]">
+                                    {{ statusLabels[issue.status] }}
+                                </span>
+                            </td>
+                            <td>
+                                <span [class]="'badge ' + priorityBadge[issue.priority]">
+                                    {{ priorityLabels[issue.priority]}}
+                                </span>
+                            </td>
+                            <td class="text-body-secondary small">{{ issue.creatorEmail }}</td>
+
+                            <td class="text-body-secondary small">
+                                {{ issue.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (totalPages() > 1) {
+            <nav class="d-flex align-items-center justify-content-between" aria-label="Paginazione">
+                <button
+                    class="btn btn-outline-secondary"
+                    [disabled]="page() === 0"
+                    (click)="goToPage(page() - 1)"
+                >
+                    Precedente
+                </button>
+
+                <span class="text-body-secondary small">
+                    Pagina {{ page() + 1 }} di {{ totalPages() }}
+                </span>
+
+                <button
+                    class="btn btn-outline-secondary"
+                    [disabled]="page() + 1 >= totalPages()"
+                    (click)="goToPage(page() + 1)"
+                >
+                    Successiva
+                </button>
+            </nav>
+
+        }
+    }
+</div>
