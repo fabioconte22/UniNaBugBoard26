@@ -66,3 +66,10 @@ export const PRIORITY_BADGE: Record<IssuePriority, string> = {
     HIGH: 'text-bg-warning',
     CRITICAL: 'text-bg-danger',
 }
+
+export interface CreateIssueRequest {
+    titolo: string; 
+    descrizione: string; 
+    type: IssueType;
+    priority: IssuePriority; 
+}

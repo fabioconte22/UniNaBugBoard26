@@ -25,6 +25,7 @@ export class IssueDetail {
     protected readonly issue = signal<Issue | null>(null);
     protected readonly loading = signal(false);
     protected readonly errorMessage = signal<string | null>(null);
+    protected readonly imageNotUploaded = this.route.snapshot.queryParamMap.get('immagine') === 'non-caricata';
 
     protected readonly statusLabels = STATUS_LABELS;
     protected readonly priorityLabels = PRIORITY_LABELS;

@@ -1,7 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Issue, IssueFilters, Page } from './issue.models';
+import { Issue, IssueFilters, Page, CreateIssueRequest } from './issue.models';
+
 
 export const PAGE_SIZE = 10; 
 
@@ -23,5 +24,15 @@ export class IssueService {
 
     getIssueById(id: string): Observable<Issue> {
         return this.http.get<Issue>(`${this.baseUrl}/${id}`);
+    }
+
+    createIssue(request: CreateIssueRequest): Observable<Issue> {
+        return this.http.post<Issue>(this.baseUrl, request);
+    }
+
+    uploadImage(id: string, file: File): Observable<Issue> {
+        const body = new FormData(); 
+        body.append('file', file);
+        return this.http.post<Issue>(`${this.baseUrl}/${id}/image`, body) 
     }
 } 
