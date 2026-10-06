@@ -23,6 +23,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/issues/issue-list/issue-list').then((m) => m.IssueList),
     },
     {
+        path: 'issues/new', 
+        canActivate: [authGuard],
+        loadComponent: () => import('./features/issues/issue-create/issue-create').then((m) => m.IssueCreate),
+    },
+    {
         path: 'issues/:id',
         canActivate: [authGuard],
         loadComponent: () => import('./features/issues/issue-detail/issue-detail').then((m) => m.IssueDetail),

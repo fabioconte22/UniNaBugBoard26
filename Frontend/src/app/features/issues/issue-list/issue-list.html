@@ -1,10 +1,13 @@
 <div class="container py-4">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-        <h1 class="h3 mb-0">Issues</h1>
+        <div>
+            <h1 class="h3 mb-0">Issues</h1>
+            @if (!loading() && !errorMessage()) {
+                <span class="text-body-secondary small">{{ totalElements() }} in totale</span>
+            }
+        </div>
 
-        @if (!loading() && !errorMessage()) {
-            <span class="text-body-secondary small">{{ totalElements() }} in totale</span>
-        }
+        <a class="btn btn-primary" routerLink="/issues/new">Nuova Issue</a>
     </div>
 
     <div class="row g-2 mb-4">
