@@ -8,7 +8,7 @@
                 <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
             }
 
-            <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input

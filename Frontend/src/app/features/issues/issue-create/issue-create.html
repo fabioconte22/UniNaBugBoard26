@@ -7,7 +7,7 @@
         <div class="alert alert-danger" role="alert">{{ message }}</div>
     }
 
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
         <div class="mb-3">
             <label for="titolo" class="form-lable">Titolo</label>
             <input
@@ -101,14 +101,54 @@
             }
         </div>
 
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary" [disabled]="loading()">
-                @if (loading()) {
-                    <span class="spinner-border spinner-border-sm me-2" aria-hideen="true"></span>
-                }
-                Crea Issue
-            </button>
-            <a class="btn btn-outline-secondary" routerLink="/issues">Annulla</a>
-        </div>
+        @if (pending(); as riepilogo) {
+            <section
+                class="border rounded p-3 bg-body-tertiary"
+                aria-labelledby="riepilogo-issue"
+                (keydown.escape)="cancel()"
+            >
+                <p id="riepilogo-issue" class="fw-semibold mb-2">
+                    Confermi la creazione di questa issue?
+                </p>
+                
+                <dl class="row small mb-3">
+                     <dt class="col-4">Titolo</dt>
+                     <dd class="col-8 text-break">{{ riepilogo.titolo }}</dd>
+
+                     <dt class="col-4">Tipo</dt>
+                    <dd class="col-8">{{ typeLabels[riepilogo.type] }}</dd>
+
+                    <dt class="col-4">Priorità</dt>
+                    <dd class="col-8">{{ priorityLabels[riepilogo.priority] }}</dd>
+
+                    <dt class="col-4">Immagine</dt>
+                    <dd class="col-8 mb-0 text-break">{{ image()?.name ?? 'nessuna' }}</dd>     
+                </dl>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button
+                        #confirmButton
+                        type="button"
+                        class="btn btn-primary"
+                        aria-describedby="riepilogo-issue"
+                        [disabled]="loading()"
+                        (click)="confirm()"
+                    >
+                        @if (loading()) {
+                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        } 
+                        Conferma e crea   
+                </button>
+                <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                    Modifica
+                </button>
+                </div>
+            </section>
+        } @else {
+            <div class="d-flex gap-2">
+                <button #submitButton type="submit" class="btn btn-primary">Crea issue</button>
+                <a class="btn btn-outline-secondary" routerLink="/issues">Annulla</a>
+            </div>
+        }
     </form>
 </div>

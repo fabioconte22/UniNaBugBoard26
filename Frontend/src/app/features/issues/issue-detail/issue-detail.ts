@@ -125,6 +125,19 @@ export class IssueDetail {
         this.selectedAssignee.set(user.email);
         this.assigneeQuery.set(`${user.cognome} ${user.nome} · ${user.email}`)
     }
+    protected onAssigneeEnter(event: Event): void {
+        event.preventDefault();
+
+        const first = this.suggestions()[0];
+        if(this.assigneeQuery() && !this.selectedAssignee() && first) {
+            this.pickAssignee(first);
+            return;
+        }
+
+        if (this.selectedAssignee() && this.selectedAssignee() !== this.issue()?.assigneeEmail) {
+            this.assign(); 
+        }
+    }
 
     protected assign(): void {
         const current = this.issue();
