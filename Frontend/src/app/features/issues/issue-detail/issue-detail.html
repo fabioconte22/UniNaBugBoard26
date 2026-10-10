@@ -31,7 +31,7 @@
             <img 
                 [src]="item.imageUrl"
                 [alt]="'Allegato della issue ' + item.titolo"
-                class="mg-fluid rounded border mb-4"
+                class="img-fluid rounded border mb-4"
             />
         }
 
@@ -45,5 +45,79 @@
             <dt class="col-sm-3">Creata il</dt>
             <dd class="col-sm-9">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
         </dl>
+
+        @if (canAssign()) {
+            <section class="border rounded p-3 mt-4">
+                <h2 class="h6 mb-3">Assegnazione</h2>
+
+                @if (assignError(); as message) {
+                    <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
+                }
+                @if (assignSuccess()) {
+                    <div class="alert alert-success py-2" role="status">
+                        Bug assegnato a {{ item.assigneeEmail }}
+                    </div>
+                }
+
+                <div class="d-flex flex-wrap align-items-start gap-2">
+                    <div style="flex: 1 1 16rem; max-width: 26rem">
+                        <label for="assegnatario" class="visually-hidden">
+                            Cerca un utente per nome o email
+                        </label>
+                        <input
+                            id="assegnatario"
+                            #assigneeInput
+                            type="search"
+                            class="form-control"
+                            placeholder="Cerca per nome, cognome o email"
+                            autocomplete="off"
+                            [value]="assigneeQuery()"
+                            (input)="onAssigneeQuery(assigneeInput.value)"
+                        />
+
+                        @if (assigneeQuery() && !selectedAssignee()) {
+                            @if (suggestions().length === 0) {
+                                <div class="form-text">Nessun utente corrisponde a "{{ assigneeQuery() }}".</div>
+                            } @else {
+                                <div class="list-group mt-1">
+                                    @for (user of suggestions(); track user.id) {
+                                        <button
+                                            type="button"
+                                            class="list-group-item list-group-item-action"
+                                            (click)="pickAssignee(user)"
+                                        >
+                                            {{ user.cognome }} {{ user.nome }}
+                                            <span class="d-block small text-body-secondary">{{ user.email }}</span>
+                                        </button>
+                                    }
+                                </div>
+                                @if (hiddenMatches() > 0) {
+                                    <div class="form-text">
+                                        E altri {{ hiddenMatches() }}: scrivi qualche lettera in più.
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        [disabled]="assigning() || !selectedAssignee() || selectedAssignee() === item.assigneeEmail"
+                        (click)="assign()"
+                    >
+                        @if (assigning()) {
+                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        } 
+                        Assegna
+                    </button>
+                </div>
+            </section>
+        }@else if (auth.isAdmin()) {
+            <p class="text-body-secondary small mt-4 mb-0">
+                Solo le issue di tipo bug possono essere assegnate.
+            </p>
+        }
+
     }
 </div>

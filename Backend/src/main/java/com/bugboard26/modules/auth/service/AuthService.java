@@ -16,6 +16,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
+
+import java.util.List;
 
 
 @Service
@@ -76,6 +79,13 @@ public class AuthService {
             .orElseThrow(() -> new UserNotFoundException(email));
         
         return toResponse(user);
+    }
+
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll(Sort.by("cognome", "nome"))
+            .stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     private UserResponse toResponse(User user) {

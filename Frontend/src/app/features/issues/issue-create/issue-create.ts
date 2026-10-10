@@ -11,6 +11,7 @@ import {
     TYPE_LABELS,
 } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
+import { notBlank } from '../../../core/forms/validators';
 
 const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
 
@@ -37,8 +38,8 @@ export class IssueCreate {
     protected readonly priorityOptions: IssuePriority[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
 
     protected readonly form = this.fb.nonNullable.group({
-        titolo: ['', [Validators.required, Validators.maxLength(255)]],
-        descrizione:['', [Validators.required, Validators.maxLength(2000)]],
+        titolo: ['', [notBlank, Validators.maxLength(255)]],
+        descrizione:['', [notBlank, Validators.maxLength(2000)]],
         type: ['' as IssueType | '', [Validators.required]],
         priority: ['LOW' as IssuePriority, [Validators.required]], 
     });
