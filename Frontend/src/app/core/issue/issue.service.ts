@@ -35,4 +35,8 @@ export class IssueService {
         body.append('file', file);
         return this.http.post<Issue>(`${this.baseUrl}/${id}/image`, body) 
     }
+
+    assignIssue(id: string, assigneeEmail: string): Observable<Issue> {
+        return this.http.patch<Issue>(`${this.baseUrl}/${id}/assign`, { assigneeEmail });
+    }
 } 
