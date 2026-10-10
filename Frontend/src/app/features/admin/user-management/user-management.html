@@ -65,7 +65,7 @@
                 <div class="alert alert-danger" role="alert">{{ message }}</div>
             }
 
-            <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+            <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
                 <div class="row g-3 mb-3">
                     <div class="col-12 col-md-6">
                         <label for="nome" class="form-label">Nome</label>
@@ -144,12 +144,56 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary" [disabled]="loading()">
-                    @if (loading()) {
-                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                    }
-                    Crea Utente
-                </button>
+                @if (pending(); as riepilogo) {
+                    <section
+                        class="border rounded p-3 bg-body-tertiary"
+                        aria-labelledby="riepilogo-utente"
+                        (keydown.escape)="cancel()"
+                    >
+                        <p id="riepilogo-utente" class="fw-semibodl mb-2">
+                            Confermi la creazione di questo account?
+                        </p>  
+                        
+                        <dl class="row small mb-3">
+                            <dt class="col-4">Nome</dt>
+                            <dd class="col-8">{{ riepilogo.nome }} {{riepilogo.cognome }}</dd>
+
+                            <dt class="col-4">Email</dt>
+                            <dd class="col-8 text-break">{{ riepilogo.email }}</dd>
+
+                            <dt class="col-4">Ruolo</dt>
+                            <dd class="col-8 mb-0">
+                                @if (riepilogo.role === 'ADMIN') {
+                                    <span class="badge text-bg-danger">Amministratore</span>
+                                    <span class="d-block text-danger mt-1">Avrà accesso a tutta l'area di gestione.</span>
+                                }@else {
+                                    Utente
+                                }
+                             </dd>
+                        </dl>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button
+                                #confirmButton
+                                type="button"
+                                class="btn btn-primary"
+                                aria-describedby="riepilogo-utente"
+                                [disabled]="loading()"
+                                (click)="confirm()"
+                            >
+                                @if (loading()) {
+                                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                }
+                                Conferma e crea
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                                Modifica
+                            </button>
+                        </div>  
+                    </section>
+                } @else {
+                    <button #submitButton type="submit" class="btn btn-primary">Crea utente</button>
+                }
             </form>
         </section>
     </div>

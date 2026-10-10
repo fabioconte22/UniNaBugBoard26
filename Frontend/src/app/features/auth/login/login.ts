@@ -3,10 +3,11 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { EnterNext } from '../../../core/forms/enter-next';
 
 @Component({
     selector: 'app-login',
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, EnterNext],
     templateUrl: './login.html',
 })
 

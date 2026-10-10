@@ -73,6 +73,7 @@
                             autocomplete="off"
                             [value]="assigneeQuery()"
                             (input)="onAssigneeQuery(assigneeInput.value)"
+                            (keydown.enter)="onAssigneeEnter($event)"
                         />
 
                         @if (assigneeQuery() && !selectedAssignee()) {

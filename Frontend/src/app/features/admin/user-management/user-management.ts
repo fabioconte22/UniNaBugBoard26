@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, effect, inject, signal, viewChild, Injector, afterNextRender } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Role, User } from '../../../core/auth/auth.models';
 import { describeHttpError } from '../../../core/http/describe-error';
+import { CreateUserRequest } from '../../../core/user/user.models';
 import { UserService } from '../../../core/user/user.service';
 import { notBlank } from '../../../core/forms/validators';
+import { EnterNext } from '../../../core/forms/enter-next';
 
 @Component({
     selector: 'app-user-management',
-    imports: [ReactiveFormsModule],
+    imports: [ReactiveFormsModule, EnterNext],
     templateUrl: './user-management.html' 
 })
 export class UserManagement {
@@ -21,6 +24,11 @@ export class UserManagement {
     protected readonly users = signal<User[]>([]);
     protected readonly usersLoading = signal(false);
     protected readonly usersError = signal<string | null>(null);
+    protected readonly pending = signal<CreateUserRequest | null>(null);
+    private readonly confirmButton = viewChild<ElementRef<HTMLButtonElement>>('confirmButton')
+    private readonly injector = inject(Injector);
+    private readonly submitButton = viewChild<ElementRef<HTMLButtonElement>>('submitButton'); 
+
 
     protected readonly form = this.fb.nonNullable.group({
         nome: ['', [notBlank]],
@@ -35,27 +43,49 @@ export class UserManagement {
             this.form.markAllAsTouched();
             return; 
         }
-
-        this.loading.set(true); 
         this.errorMessage.set(null); 
         this.createdUser.set(null); 
+        this.pending.set(this.form.getRawValue());
+    }
 
-        this.userService.createUser(this.form.getRawValue()).subscribe({
+    protected cancel(): void {
+        this.pending.set(null);
+        afterNextRender(() => this.submitButton()?.nativeElement.focus(), {
+            injector: this.injector,
+        });
+    }
+
+    protected confirm(): void {
+        const request = this.pending();
+        if (!request || this.loading()) return; 
+
+        this.loading.set(true);
+
+        this.userService.createUser(request).subscribe({
             next: (user) => {
+                this.pending.set(null);
                 this.createdUser.set(user);
                 this.form.reset();
-                this.loadUsers();
+                this.loadUsers(); 
                 this.loading.set(false);
             },
             error: (error: HttpErrorResponse) => {
+                this.pending.set(null);
                 this.errorMessage.set(describeHttpError(error));
                 this.loading.set(false);
-            },
+                
+            }
         });
     }
 
     constructor() {
         this.loadUsers();
+
+        this.form.valueChanges
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.pending.set(null));
+        
+        effect(() => this.confirmButton()?.nativeElement.focus());
     }
 
     protected loadUsers(): void {
