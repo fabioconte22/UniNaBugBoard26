@@ -73,3 +73,12 @@ export interface CreateIssueRequest {
     type: IssueType;
     priority: IssuePriority; 
 }
+
+export interface IssueComment {
+    id: string;
+    content: string;
+    authorEmail: string; 
+    authorNome: string | null;
+    authorCognome: string | null; 
+    createdAt: string;  
+}

@@ -1,0 +1,41 @@
+// Tooltip con l'email dell'autore. In CSS invece che con l'attributo title:
+// compare subito (non dopo un secondo di mouse fermo), e anche con la
+// tastiera (Tab) e con un tocco sul telefono.
+.autore {
+    position: relative;
+    cursor: help;
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+
+    &::after {
+        content: attr(data-email);
+        position: absolute;
+        left: 0;
+        bottom: calc(100% + 6px);
+        z-index: 10;
+        max-width: 80vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--bs-border-radius-sm);
+        background: var(--bs-emphasis-color);
+        color: var(--bs-body-bg);
+        font-size: 0.75rem;
+        font-weight: 400;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.1s;
+    }
+
+    &:hover::after,
+    &:focus::after {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .autore::after {
+        transition: none;
+    }
+}

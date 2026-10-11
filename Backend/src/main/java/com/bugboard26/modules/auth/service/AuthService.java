@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -86,6 +90,12 @@ public class AuthService {
             .stream()
             .map(this::toResponse)
             .toList();
+    }
+
+    public Map<String, UserResponse> findUsersByEmails(Collection<String> emails) {
+        return userRepository.findByEmailIn(emails)
+                .stream()
+                .collect(Collectors.toMap(User::getEmail, this::toResponse));
     }
 
     private UserResponse toResponse(User user) {
