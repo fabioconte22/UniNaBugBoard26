@@ -15,6 +15,7 @@ import {
 } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
 import { UserService } from '../../../core/user/user.service';
+import { IssueComments } from '../issue-comments/issue-comments';
 
 const MAX_SUGGESTIONS = 8; 
 
@@ -24,7 +25,7 @@ function normalize(text: string): string {
 
 @Component({
     selector: 'app-issue-detail',
-    imports: [DatePipe, RouterLink],
+    imports: [DatePipe, RouterLink, IssueComments],
     templateUrl: './issue-detail.html',
 })
 export class IssueDetail {

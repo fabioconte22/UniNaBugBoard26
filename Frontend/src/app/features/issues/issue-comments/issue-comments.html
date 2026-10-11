@@ -1,0 +1,84 @@
+<section class="mt-5" aria-labelledby="titolo-commenti">
+    <h2 id="titolo-commenti" class="h5 mb-3">
+        Commenti
+        @if (!loading() && !loadError()) {
+            <span class="text-body-secondary fw-normal">({{ comments().length }})</span>
+        }
+    </h2>
+
+    <form [formGroup]="form" (ngSubmit)="publish()" novalidate class="mb-4">
+        <label for="nuovo-commento" class="form-label">Aggiungi un commento</label>
+        <textarea
+            id="nuovo-commento"
+            rows="3"
+            class="form-control"
+            formControlName="content"
+            [attr.maxlength]="maxLength"
+            [class.is-invalid]="attempted() && form.controls.content.invalid"
+            (keydown.meta.enter)="publishFromKeyboard($event)"
+            (keydown.control.enter)="publishFromKeyboard($event)"
+        ></textarea>
+        @if (attempted() && form.controls.content.invalid) {
+            <div class="invalid-feedback">Scrivi qualcosa prima di pubblicare.</div>
+        }
+
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-2">
+            <span class="form-text m-0">
+                {{ form.controls.content.value.length }} / {{ maxLength }} · {{ shortcut }} per pubblicare
+            </span>
+            <button type="submit" class="btn btn-primary" [disabled]="posting()">
+                @if (posting()) {
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                }
+                Pubblica
+            </button>
+        </div>
+
+        @if (postError(); as message) {
+            <div class="alert alert-danger mt-2 py-2" role="alert">{{ message }}</div>
+        }
+    </form>
+
+    @if (loading()) {
+        <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            Caricamento dei commenti…
+        </div>
+    } @else if (loadError(); as message) {
+        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Riprova</button>
+        </div>
+    } @else if (comments().length === 0) {
+        <p class="text-body-secondary">Nessun commento. Scrivi il primo.</p>
+    } @else {
+        <ol class="list-unstyled d-flex flex-column gap-3 mb-0" reversed>
+            @for (comment of newestFirst(); track comment.id) {
+                <li
+                    class="border rounded p-3"
+                    [class.bg-body-tertiary]="comment.authorEmail === myEmail()"
+                >
+                    <div class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary mb-1">
+                        <span class="fw-semibold text-body">
+                            @if (comment.authorNome) {
+                                <span class="autore" tabindex="0" [attr.data-email]="comment.authorEmail">
+                                    {{ comment.authorNome }} {{ comment.authorCognome }}
+                                </span>
+                                <span class="visually-hidden">({{ comment.authorEmail }})</span>
+                            } @else {
+                                {{ comment.authorEmail }}
+                            }
+                            @if (comment.authorEmail === myEmail()) {
+                                <span class="fw-normal text-body-secondary">(tu)</span>
+                            }
+                        </span>
+                        <time [attr.datetime]="comment.createdAt">
+                            {{ comment.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+                        </time>
+                    </div>
+                    <p class="mb-0 text-break" style="white-space: pre-wrap">{{ comment.content }}</p>
+                </li>
+            }
+        </ol>
+    }
+</section>

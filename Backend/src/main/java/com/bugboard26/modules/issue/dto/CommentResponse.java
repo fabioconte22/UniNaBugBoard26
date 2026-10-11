@@ -11,5 +11,7 @@ public class CommentResponse {
     private String id;
     private String content;
     private String authorEmail;
+    private String authorNome;
+    private String authorCognome; 
     private Instant createdAt;
 }
