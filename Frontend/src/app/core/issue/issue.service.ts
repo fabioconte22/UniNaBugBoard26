@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Issue, IssueFilters, Page, CreateIssueRequest, IssueComment } from './issue.models';
+import { Issue, IssueFilters, IssueStatus, Page, CreateIssueRequest, IssueComment } from './issue.models';
 
 
 export const PAGE_SIZE = 10; 
@@ -38,6 +38,10 @@ export class IssueService {
 
     assignIssue(id: string, assigneeEmail: string): Observable<Issue> {
         return this.http.patch<Issue>(`${this.baseUrl}/${id}/assign`, { assigneeEmail });
+    }
+
+    updateStatus(id: string, status: IssueStatus, note?: string): Observable<Issue> {
+        return this.http.patch<Issue>(`${this.baseUrl}/${id}/status`, { status, note });
     }
 
     getComments(issueId: string): Observable<IssueComment[]> {

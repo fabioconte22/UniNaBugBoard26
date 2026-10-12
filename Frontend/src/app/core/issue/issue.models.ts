@@ -1,6 +1,7 @@
 export type IssueStatus = 'TODO' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
 export type IssuePriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 export type IssueType = 'QUESTION' | 'BUG' | 'DOCUMENTATION' | 'FEATURE';
+export type CommentKind = 'COMMENT' | 'STATUS_CHANGE';
 
 export interface Issue {
     id: string;
@@ -79,6 +80,9 @@ export interface IssueComment {
     content: string;
     authorEmail: string; 
     authorNome: string | null;
-    authorCognome: string | null; 
-    createdAt: string;  
+    authorCognome: string | null;
+    createdAt: string;
+    kind: CommentKind;
+    fromStatus: IssueStatus | null;
+    toStatus: IssueStatus | null;
 }

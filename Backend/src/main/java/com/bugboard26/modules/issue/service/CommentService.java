@@ -3,6 +3,7 @@ package com.bugboard26.modules.issue.service;
 import com.bugboard26.modules.issue.dto.CommentResponse;
 import com.bugboard26.modules.issue.dto.CreateCommentRequest;
 import com.bugboard26.modules.issue.model.Comment;
+import com.bugboard26.modules.issue.model.CommentKind;
 import com.bugboard26.modules.issue.model.Issue;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
@@ -30,6 +31,7 @@ public class CommentService {
                 .orElseThrow(() -> new IssueNotFoundException(issueId));
 
         Comment comment = Comment.builder()
+                .kind(CommentKind.COMMENT)
                 .content(request.getContent())
                 .authorEmail(authorEmail)
                 .issue(issue)
@@ -61,7 +63,10 @@ public class CommentService {
                 comment.getAuthorEmail(),
                 author != null ? author.nome() : null,
                 author != null ? author.cognome() : null,
-                comment.getCreatedAt()
+                comment.getCreatedAt(),
+                comment.getKind() != null ? comment.getKind() : CommentKind.COMMENT,
+                comment.getFromStatus(),
+                comment.getToStatus()
         );
     }
 }

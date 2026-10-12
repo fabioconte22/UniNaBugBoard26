@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,9 +81,12 @@ public class IssueController {
     @PatchMapping("/{id}/status")
     public ResponseEntity <IssueResponse> updateStatus(
             @PathVariable String id,
-            @Valid @RequestBody UpdateIssueStatusRequest request, 
-            @AuthenticationPrincipal String email) {
-        IssueResponse response = issueService.updateStatus(id, request.getStatus(), email);
+            @Valid @RequestBody UpdateIssueStatusRequest request,
+            @AuthenticationPrincipal String email,
+            Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+        .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        IssueResponse response = issueService.updateStatus(id, request.getStatus(), request.getNote(), email, isAdmin);
         return ResponseEntity.ok(response);
     }
 

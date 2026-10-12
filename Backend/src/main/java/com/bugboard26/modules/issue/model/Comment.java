@@ -32,6 +32,15 @@ public class Comment {
     @JoinColumn(name = "issue_id", nullable = false)
     private Issue issue;
 
+    @Enumerated(EnumType.STRING)
+    private CommentKind kind;
+
+    @Enumerated(EnumType.STRING)
+    private IssueStatus fromStatus;
+
+    @Enumerated(EnumType.STRING)
+    private IssueStatus toStatus;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

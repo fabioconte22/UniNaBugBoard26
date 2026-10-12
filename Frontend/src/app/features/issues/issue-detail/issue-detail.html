@@ -46,6 +46,83 @@
             <dd class="col-sm-9">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
         </dl>
 
+        <section class="border rounded p-3 mt-4" aria-labelledby="titolo-avanzamento">
+            <h2 id="titolo-avanzamento" class="h6 mb-2">Avanzamento</h2>
+
+            @if (statusError(); as message) {
+                <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
+            }
+
+            @if (pendingAction(); as action) {
+                <div (keydown.escape)="cancelStatus()">
+                    <p class="mb-3">
+                        <span class="text-body-secondary">Passaggio:</span>
+                        <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
+                        →
+                        <span [class]="'badge ' + statusBadge[action.to]">{{ statusLabels[action.to] }}</span>
+                    </p>
+
+                    @if (action.note !== 'none') {
+                        <label for="nota-stato" class="form-label small">
+                            {{ action.note === 'required' ? 'Report di risoluzione' : 'Motivo della riapertura (facoltativo)' }}
+                        </label>
+                        <textarea
+                            #statusNoteInput
+                            id="nota-stato"
+                            rows="3"
+                            class="form-control"
+                            [attr.maxlength]="maxNoteLength"
+                            [class.is-invalid]="noteAttempted() && !statusNote().trim()"
+                            [value]="statusNote()"
+                            (input)="statusNote.set(statusNoteInput.value)"
+                            (keydown.meta.enter)="confirmStatusFromKeyboard($event)"
+                            (keydown.control.enter)="confirmStatusFromKeyboard($event)"
+                        ></textarea>
+                        @if (noteAttempted() && !statusNote().trim()) {
+                            <div class="invalid-feedback">Scrivi un breve report di quello che è stato fatto.</div>
+                        }
+                        <div class="form-text">{{ statusNote().length }} / {{ maxNoteLength }}</div>
+                    }
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button
+                            #statusConfirm
+                            type="button"
+                            class="btn btn-primary"
+                            [disabled]="statusSaving()"
+                            (click)="confirmStatus()"
+                        >
+                            @if (statusSaving()) {
+                                <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                            }
+                            Conferma
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" (click)="cancelStatus()">
+                            Annulla
+                        </button>
+                    </div>
+                </div>
+            } @else {
+                @if (statusActions().length > 0) {
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        @for (action of statusActions(); track action.to) {
+                            <button
+                                #statusActionButton
+                                type="button"
+                                [class]="'btn btn-sm ' + action.style"
+                                (click)="chooseAction(action)"
+                            >
+                                {{ action.label }}
+                            </button>
+                        }
+                    </div>
+                }
+                @if (statusHint(); as hint) {
+                    <p class="small text-body-secondary mb-0">{{ hint }}</p>
+                }
+            }
+        </section>
+
         @if (canAssign()) {
             <section class="border rounded p-3 mt-4">
                 <h2 class="h6 mb-3">Assegnazione</h2>
@@ -119,7 +196,7 @@
                 Solo le issue di tipo bug possono essere assegnate.
             </p>
         }
-        <app-issue-comments [issueId]="item.id" />
+        <app-issue-comments [issueId]="item.id" [refresh]="historyVersion()" />
 
     }
 </div>

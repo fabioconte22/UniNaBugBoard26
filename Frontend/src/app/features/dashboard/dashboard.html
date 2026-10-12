@@ -30,6 +30,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Titolo</th>
+                            <th scope="col">Tipo</th>
                             <th scope="col">Stato</th>
                             <th scope="col">Priorità</th>
                             <th scope="col">Segnalata da</th>
@@ -40,6 +41,7 @@
                         @for (issue of assignedSorted(); track issue.id) {
                             <tr [class.text-body-secondary]="!isOpen(issue)">
                                 <td><a [routerLink]="['/issues', issue.id]">{{ issue.titolo }}</a></td>
+                                <td>{{ typeLabels[issue.type] }}</td>
                                 <td>
                                     <span [class]="'badge ' + statusBadge[issue.status]">
                                         {{ statusLabels[issue.status] }}
