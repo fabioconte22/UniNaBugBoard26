@@ -1,5 +1,7 @@
 package com.bugboard26.modules.issue.dto;
 
+import com.bugboard26.modules.issue.model.CommentKind;
+import com.bugboard26.modules.issue.model.IssueStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,4 +16,7 @@ public class CommentResponse {
     private String authorNome;
     private String authorCognome; 
     private Instant createdAt;
+    private CommentKind kind;
+    private IssueStatus fromStatus;
+    private IssueStatus toStatus;
 }

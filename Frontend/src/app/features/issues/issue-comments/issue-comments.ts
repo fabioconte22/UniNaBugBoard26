@@ -5,7 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { notBlank } from '../../../core/forms/validators';
 import { describeHttpError } from '../../../core/http/describe-error';
-import { IssueComment } from '../../../core/issue/issue.models';
+import { IssueComment, STATUS_BADGE, STATUS_LABELS } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
 
 const MAX_COMMENT_LENGTH = 2000; 
@@ -22,6 +22,7 @@ export class IssueComments {
     private readonly fb = inject(FormBuilder);
 
     readonly issueId = input.required<string>(); 
+    readonly refresh = input(0);
 
     protected readonly comments = signal<IssueComment[]>([]);
     protected readonly loading = signal(false);
@@ -33,6 +34,12 @@ export class IssueComments {
     protected readonly maxLength = MAX_COMMENT_LENGTH;
     protected readonly myEmail = computed(() => this.auth.user()?.email);
     protected readonly newestFirst = computed(() => [...this.comments()].reverse());
+    protected readonly commentCount = computed(
+        () => this.comments().filter((comment) => comment.kind !== 'STATUS_CHANGE').length,
+    );
+
+    protected readonly statusLabels = STATUS_LABELS;
+    protected readonly statusBadge = STATUS_BADGE; 
 
     protected readonly shortcut = /Mac|iPhone|iPad/.test(navigator.userAgent)
         ? '⌘ + Invio'
@@ -43,7 +50,10 @@ export class IssueComments {
     });
 
     constructor() {
-        effect(() => this.load(this.issueId())); 
+        effect(() => {
+            this.refresh();
+            this.load(this.issueId())
+        }); 
     }
 
     protected retry(): void {

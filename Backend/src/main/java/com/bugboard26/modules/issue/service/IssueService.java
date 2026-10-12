@@ -3,16 +3,21 @@ package com.bugboard26.modules.issue.service;
 import com.bugboard26.modules.auth.service.AuthService;
 import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
+import com.bugboard26.modules.issue.model.Comment;
+import com.bugboard26.modules.issue.model.CommentKind;
 import com.bugboard26.modules.issue.model.Issue;
 import com.bugboard26.modules.issue.model.IssuePriority;
 import com.bugboard26.modules.issue.model.IssueStatus;
 import com.bugboard26.modules.issue.model.IssueType;
+import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
 import com.bugboard26.shared.exception.InvalidIssueTypeForAssignmentException;
 import com.bugboard26.shared.exception.IssueAccessDeniedException;
 import com.bugboard26.shared.exception.IssueNotFoundException;
+import com.bugboard26.shared.exception.InvalidStatusTransitionException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +33,8 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final FileStorageService fileStorageService;
-    private final AuthService authService; 
+    private final AuthService authService;
+    private final CommentRepository commentRepository;
 
     public IssueResponse createIssue(CreateIssueRequest request, String creatorEmail) {
         IssuePriority priorityToSet = request.getPriority() != null ? request.getPriority() : IssuePriority.LOW;
@@ -139,19 +145,58 @@ public class IssueService {
 
     }
 
-    public IssueResponse updateStatus(String issueId, String statusStr, String callerEmail) {
+    @Transactional
+    public IssueResponse updateStatus(String issueId, String statusStr, String note,
+                                      String callerEmail, boolean callerIsAdmin) {
         Issue issue = issueRepository.findById(issueId)
-                        .orElseThrow(() -> new IssueNotFoundException(issueId));
-        
-        if(!callerEmail.equals(issue.getAssigneeEmail())) {
-            throw new IssueAccessDeniedException();
+                .orElseThrow(() -> new IssueNotFoundException(issueId));
+
+        IssueStatus from = issue.getStatus();
+        IssueStatus to = parseEnumFilter(IssueStatus.class, statusStr, "Stato");
+        String cleanNote = note == null ? "" : note.trim();
+
+        if (from == IssueStatus.TODO && to == IssueStatus.IN_PROGRESS) {
+            if (issue.getType() != IssueType.BUG && issue.getAssigneeEmail() == null) {
+                // Presa in carico: per le issue non-bug, chi la avvia ne diventa responsabile.
+                issue.setAssigneeEmail(callerEmail);
+            } else {
+                requireAssignee(issue, callerEmail);
+            }
+        } else if (from == IssueStatus.IN_PROGRESS && to == IssueStatus.RESOLVED) {
+            requireAssignee(issue, callerEmail);
+            if (cleanNote.isEmpty()) {
+                throw new InvalidStatusTransitionException(
+                        "Per segnare la issue come risolta serve un breve report di quello che è stato fatto.");
+            }
+        } else if (from == IssueStatus.RESOLVED
+                && (to == IssueStatus.CLOSED || to == IssueStatus.IN_PROGRESS)) {
+            if (!callerIsAdmin) {
+                throw new IssueAccessDeniedException();
+            }
+        } else {
+            throw new InvalidStatusTransitionException(
+                    "Passaggio di stato non consentito: da " + from + " a " + to + ".");
         }
 
-        IssueStatus newStatus = parseEnumFilter(IssueStatus.class, statusStr, "Stato");
-        issue.setStatus(newStatus);
+        issue.setStatus(to);
         Issue saved = issueRepository.save(issue);
 
+        commentRepository.save(Comment.builder()
+                .kind(CommentKind.STATUS_CHANGE)
+                .fromStatus(from)
+                .toStatus(to)
+                .content(cleanNote)
+                .authorEmail(callerEmail)
+                .issue(saved)
+                .build());
+
         return toResponse(saved);
+    }
+
+    private void requireAssignee(Issue issue, String callerEmail) {
+        if (!callerEmail.equals(issue.getAssigneeEmail())) {
+            throw new IssueAccessDeniedException();
+        }
     }
 
     private <T extends Enum<T>> T parseEnumFilter(Class<T> enumType, String value, String fieldName) {
