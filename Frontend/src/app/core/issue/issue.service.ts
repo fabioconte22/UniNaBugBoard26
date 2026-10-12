@@ -47,4 +47,12 @@ export class IssueService {
     addComment(issueId: string, content: string): Observable<IssueComment> {
         return this.http.post<IssueComment>(`${this.baseUrl}/${issueId}/comments`, { content }); 
     }
+
+    getMyIssues(): Observable<Issue[]> {
+        return this.http.get<Issue[]>(`${this.baseUrl}/me`);
+    }
+
+    getAssignedIssues(): Observable<Issue[]> {
+        return this.http.get<Issue[]>(`${this.baseUrl}/assigned`);
+    }
 } 

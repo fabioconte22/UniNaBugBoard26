@@ -1,6 +1,112 @@
-<div class="container py-5">
-    <h1 class="h3">Ciao {{ auth.user()?.nome }}</h1>
-    <p class="text-body-secondary mb-0">
-        Qui copariranno le tue segnalazioni.
-    </p>
+<div class="container py-4">
+    <h1 class="h3 mb-4">Ciao {{ auth.user()?.nome }}</h1>
+
+    <section class="mb-5" aria-labelledby="titolo-assegnate">
+        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+            <h2 id="titolo-assegnate" class="h5 mb-0">In carico a me</h2>
+            @if (!assignedLoading() && !assignedError() && assigned().length > 0) {
+                <span class="text-body-secondary small">
+                    {{ openAssignedCount() }} {{ openAssignedCount() === 1 ? 'aperta' : 'aperte' }}
+                    su {{ assigned().length }}
+                </span>
+            }
+        </div>
+
+        @if (assignedLoading()) {
+            <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                Caricamento in corso…
+            </div>
+        } @else if (assignedError(); as message) {
+            <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadAssigned()">Riprova</button>
+            </div>
+        } @else if (assigned().length === 0) {
+            <p class="text-body-secondary mb-0">Non hai bug assegnati.</p>
+        } @else {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Titolo</th>
+                            <th scope="col">Stato</th>
+                            <th scope="col">Priorità</th>
+                            <th scope="col">Segnalata da</th>
+                            <th scope="col">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (issue of assignedSorted(); track issue.id) {
+                            <tr [class.text-body-secondary]="!isOpen(issue)">
+                                <td><a [routerLink]="['/issues', issue.id]">{{ issue.titolo }}</a></td>
+                                <td>
+                                    <span [class]="'badge ' + statusBadge[issue.status]">
+                                        {{ statusLabels[issue.status] }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span [class]="'badge ' + priorityBadge[issue.priority]">
+                                        {{ priorityLabels[issue.priority] }}
+                                    </span>
+                                </td>
+                                <td class="small text-break">{{ issue.creatorEmail }}</td>
+                                <td class="small text-nowrap">{{ issue.createdAt | date: 'dd/MM/yyyy' }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <section aria-labelledby="titolo-mie">
+        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+            <h2 id="titolo-mie" class="h5 mb-0">Le mie segnalazioni</h2>
+            <a class="btn btn-sm btn-outline-primary" routerLink="/issues/new">Nuova issue</a>
+        </div>
+
+        @if (mineLoading()) {
+            <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                Caricamento in corso…
+            </div>
+        } @else if (mineError(); as message) {
+            <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+                <span>{{ message }}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadMine()">Riprova</button>
+            </div>
+        } @else if (mine().length === 0) {
+            <p class="text-body-secondary mb-0">Non hai ancora aperto nessuna issue.</p>
+        } @else {
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Titolo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Stato</th>
+                            <th scope="col">Assegnata a</th>
+                            <th scope="col">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (issue of mineSorted(); track issue.id) {
+                            <tr>
+                                <td><a [routerLink]="['/issues', issue.id]">{{ issue.titolo }}</a></td>
+                                <td>{{ typeLabels[issue.type] }}</td>
+                                <td>
+                                    <span [class]="'badge ' + statusBadge[issue.status]">
+                                        {{ statusLabels[issue.status] }}
+                                    </span>
+                                </td>
+                                <td class="small text-break">{{ issue.assigneeEmail ?? '—' }}</td>
+                                <td class="small text-nowrap">{{ issue.createdAt | date: 'dd/MM/yyyy' }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
 </div>
