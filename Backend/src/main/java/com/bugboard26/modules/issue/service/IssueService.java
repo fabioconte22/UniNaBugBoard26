@@ -88,10 +88,13 @@ public class IssueService {
             throw new IssueAccessDeniedException();
         }
 
+        String previousImageUrl = issue.getImageUrl();
         String imageUrl = fileStorageService.uploadImage(file);
 
         issue.setImageUrl(imageUrl);
         Issue saved = issueRepository.save(issue);
+
+        fileStorageService.deleteImage(previousImageUrl);
 
         return toResponse(saved);
 
