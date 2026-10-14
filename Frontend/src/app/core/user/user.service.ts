@@ -16,4 +16,8 @@ export class UserService {
     getUsers(): Observable<User[]> {
         return this.http.get<User[]>(this.baseUrl);
     }
+
+    resetPassword(userId: string, newPassword: string): Observable<void> {
+        return this.http.patch<void>(`${this.baseUrl}/${userId}/password`, { newPassword });
+    }
 }

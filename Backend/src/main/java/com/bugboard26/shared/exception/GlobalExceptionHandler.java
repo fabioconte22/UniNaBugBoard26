@@ -85,6 +85,12 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.PAYLOAD_TOO_LARGE, "L'immagine supera il limite di 1 MB.");
     }
 
+    @ExceptionHandler(InvalidPasswordChangeException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleInvalidPasswordChangeException(InvalidPasswordChangeException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     //Cattura qualsiasi altra eccezione non prevista 
     @ExceptionHandler(Exception.class) 
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {

@@ -9,6 +9,9 @@ import com.bugboard26.modules.auth.repository.UserRepository;
 import com.bugboard26.shared.exception.EmailAlreadyExistsException;
 import com.bugboard26.shared.exception.InvalidCredentialException;
 import com.bugboard26.shared.exception.UserNotFoundException;
+import com.bugboard26.modules.auth.dto.ChangePasswordRequest;
+import com.bugboard26.modules.auth.dto.ResetPasswordRequest;
+import com.bugboard26.shared.exception.InvalidPasswordChangeException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -96,6 +99,28 @@ public class AuthService {
         return userRepository.findByEmailIn(emails)
                 .stream()
                 .collect(Collectors.toMap(User::getEmail, this::toResponse));
+    }
+
+    public void changePassword(String email, ChangePasswordRequest request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidPasswordChangeException("La password attuale non è corretta.");
+        }
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())){
+            throw new InvalidPasswordChangeException("La nuova password deve essere diversa da quella attuale.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user); 
+    }
+
+    public void resetPassword(String userId, ResetPasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user); 
     }
 
     private UserResponse toResponse(User user) {

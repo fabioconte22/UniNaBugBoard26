@@ -1,5 +1,5 @@
 @if (auth.isAuthenticated()) {
-    <nav class="navbar navbar-expand-md bg-body-tertiary border-botton">
+    <nav class="navbar navbar-expand-md bg-body-tertiary border-bottom">
         <div class="container">
             <a 
                 class="navbar-brand d-flex align-items-center gap-2"
@@ -61,15 +61,36 @@
                     }
                 </ul>
 
-                <div class="d-flex align-items-center gap-3 py-2 py-md-0">
-                    <span class="text-body-secondary small">
+                <div class="dropdown py-2 py-md-0">
+                    <button 
+                        type="button"
+                        class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
                         {{ auth.user()?.nome }}
-                        <span class="badge text-bg-secondary ms-1">{{ auth.user()?.role}}</span>
-                    </span>
-
-                    <button class="btn btn-sm btn-outline-secondary" (click)="logout()">
-                        Esci
+                        <span class="badge text-bg-secondary ms-1">{{ auth.user()?.role }}</span>
                     </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <span class="dropdown-item-text small text-body-secondary">{{ auth.user()?.email }}</span>
+                        </li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li>
+                            <a 
+                                class="dropdown-item"
+                                routerLink="/profile"
+                                routerLinkActive="active"
+                                (click)="closeMenu()"
+                            >
+                                Profilo
+                            </a>
+                        </li>
+                        <li>
+                            <button type="button" class="dropdown-item" (click)="logout()">Esci</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
