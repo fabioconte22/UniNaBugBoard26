@@ -66,6 +66,10 @@ public class SecurityConfig {
             .authenticationEntryPoint((request, response , authException) -> 
                 writeError(response, HttpStatus.UNAUTHORIZED,
                     "Autenticazione richiesta: effettua di nuovo l'accesso." ))
+            
+            .accessDeniedHandler((request, response, accessDeniedException) -> 
+                writeError(response, HttpStatus.FORBIDDEN,
+                    "Non hai i permessi per questa operazione."))
         )
 
         .authenticationProvider(authenticationProvider())
