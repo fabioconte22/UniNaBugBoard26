@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, catchError, of, switchMap, tap } from "rxjs";
-import { AuthResponse, LoginRequest, User } from './auth.models';
+import { AuthResponse, LoginRequest, User, ChangePasswordRequest} from './auth.models';
 
 const TOKEN_KEY = 'bugboard26.token';
 
@@ -42,6 +42,10 @@ export class AuthService {
             }),
             
         );
+    }
+
+    changePassword(request: ChangePasswordRequest): Observable<void> {
+        return this.http.patch<void>('/api/auth/me/password', request);
     }
 
     logout(): void {

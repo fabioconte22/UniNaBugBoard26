@@ -8,10 +8,11 @@ import { CreateUserRequest } from '../../../core/user/user.models';
 import { UserService } from '../../../core/user/user.service';
 import { notBlank } from '../../../core/forms/validators';
 import { EnterNext } from '../../../core/forms/enter-next';
+import { PasswordReset } from '../password-reset/password-reset';
 
 @Component({
     selector: 'app-user-management',
-    imports: [ReactiveFormsModule, EnterNext],
+    imports: [ReactiveFormsModule, EnterNext, PasswordReset],
     templateUrl: './user-management.html' 
 })
 export class UserManagement {
@@ -25,6 +26,8 @@ export class UserManagement {
     protected readonly usersLoading = signal(false);
     protected readonly usersError = signal<string | null>(null);
     protected readonly pending = signal<CreateUserRequest | null>(null);
+    protected readonly resetTarget = signal<User | null>(null);
+    protected readonly resetDone = signal<User | null>(null);
     private readonly confirmButton = viewChild<ElementRef<HTMLButtonElement>>('confirmButton')
     private readonly injector = inject(Injector);
     private readonly submitButton = viewChild<ElementRef<HTMLButtonElement>>('submitButton'); 
@@ -86,6 +89,16 @@ export class UserManagement {
             .subscribe(() => this.pending.set(null));
         
         effect(() => this.confirmButton()?.nativeElement.focus());
+    }
+
+    protected startReset(user: User): void {
+        this.resetDone.set(null); 
+        this.resetTarget.set(user); 
+    }
+
+    protected onResetDone(user: User): void {
+        this.resetTarget.set(null); 
+        this.resetDone.set(user); 
     }
 
     protected loadUsers(): void {

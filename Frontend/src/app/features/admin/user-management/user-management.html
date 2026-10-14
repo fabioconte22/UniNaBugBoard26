@@ -20,7 +20,7 @@
             } @else if (usersError(); as message) {
                 <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
                     <span> {{ message }}</span>
-                    <button type="button" class="tn btn-sm btn-outline-danger" (click)="loadUsers()">Riprova</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadUsers()">Riprova</button>
                 </div>
             } @else {
                 <div class="table-responsive">
@@ -30,25 +30,50 @@
                                 <th scope="col">Nome</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Ruolo</th>
+                                <th scope="col"><span class="visually-hidden">Azioni</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             @for (user of users(); track user.id) {
                                 <tr>
                                     <td>{{ user.cognome }} {{ user.nome }}</td>
-                                    <td class="ext-body-secondary small">{{ user.email }}</td>
+                                    <td class="text-body-secondary small">{{ user.email }}</td>
                                     <td>
-                                        <span [class]=" 'badge' + (user.role === 'ADMIN' ? 'text-bg-primary' : 'text-bg-secondary')">
+                                        <span [class]="'badge ' + (user.role === 'ADMIN' ? 'text-bg-primary' : 'text-bg-secondary')">
                                             {{ user.role === 'ADMIN' ? 'Amministratore' : 'Utente'}}
                                         </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-outline-secondary text-nowrap"
+                                            (click)="startReset(user)"
+                                        >
+                                            Reimposta password
+                                            <span class="visually-hidden">di {{ user.nome }} {{ user.cognome }}</span>
+                                        </button>
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
-
                 </div>
-            } 
+
+                @if (resetDone(); as user) {
+                    <div class="alert alert-success" role="status">
+                        Password di <strong>{{ user.nome }} {{ user.cognome }}</strong> reimpostata.
+                        Comunicagliela: l'app non invia email.
+                    </div>
+                }
+
+                @if (resetTarget(); as target) {
+                    <app-password-reset
+                        [user]="target"
+                        (done)="onResetDone($event)"
+                        (cancelled)="resetTarget.set(null)"
+                    />
+                }
+            }
         </section>
 
         <section class="col-12 col-lg-5">
@@ -150,7 +175,7 @@
                         aria-labelledby="riepilogo-utente"
                         (keydown.escape)="cancel()"
                     >
-                        <p id="riepilogo-utente" class="fw-semibodl mb-2">
+                        <p id="riepilogo-utente" class="fw-semibold mb-2">
                             Confermi la creazione di questo account?
                         </p>  
                         

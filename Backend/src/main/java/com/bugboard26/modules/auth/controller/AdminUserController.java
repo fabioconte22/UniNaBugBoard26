@@ -3,6 +3,7 @@ package com.bugboard26.modules.auth.controller;
 import com.bugboard26.modules.auth.dto.CreateUserRequest;
 import com.bugboard26.modules.auth.dto.UserResponse;
 import com.bugboard26.modules.auth.service.AuthService;
+import com.bugboard26.modules.auth.dto.ResetPasswordRequest;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -33,4 +36,13 @@ public class AdminUserController {
         UserResponse response = authService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> resetPassword(
+            @PathVariable String id,
+            @Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(id, request);
+        return ResponseEntity.noContent().build();
+    }
+
 }
