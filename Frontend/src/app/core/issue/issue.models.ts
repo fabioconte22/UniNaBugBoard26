@@ -86,3 +86,16 @@ export interface IssueComment {
     fromStatus: IssueStatus | null;
     toStatus: IssueStatus | null;
 }
+
+export interface WeekTrend {
+    weekStart: string; 
+    created: number; 
+    closed: number;
+}
+
+export interface IssueStats {
+    byStatus: Record<IssueStatus, number>;
+    byTypeAndStatus: Record<IssueType, Record<IssueStatus, number>>; 
+    openByPriority: Record<IssuePriority, number>; 
+    lastWeeks: WeekTrend[]; 
+}

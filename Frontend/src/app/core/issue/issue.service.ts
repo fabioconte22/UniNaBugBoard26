@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Issue, IssueFilters, IssueStatus, Page, CreateIssueRequest, IssueComment } from './issue.models';
+import { Issue, IssueFilters, IssueStatus, Page, CreateIssueRequest, IssueComment, IssueStats } from './issue.models';
 
 
 export const PAGE_SIZE = 10; 
@@ -58,5 +58,9 @@ export class IssueService {
 
     getAssignedIssues(): Observable<Issue[]> {
         return this.http.get<Issue[]>(`${this.baseUrl}/assigned`);
+    }
+
+    getStats(): Observable<IssueStats> {
+        return this.http.get<IssueStats>(`${this.baseUrl}/stats`); 
     }
 } 

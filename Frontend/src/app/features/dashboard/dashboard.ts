@@ -15,13 +15,14 @@ import {
     TYPE_LABELS,
 } from '../../core/issue/issue.models';
 import { IssueService } from '../../core/issue/issue.service';
+import { DashboardOverview } from './overview/overview';
 
 const PRIORITY_ORDER: Record<IssuePriority, number> = {CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 const OPEN_STATUSES: IssueStatus[] = ['TODO', 'IN_PROGRESS'];
 
 @Component({
     selector: 'app-dashboard',
-    imports: [DatePipe, RouterLink],
+    imports: [DatePipe, RouterLink, DashboardOverview],
     templateUrl: './dashboard.html',  
 })
 export class Dashboard {

@@ -5,6 +5,8 @@ import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.dto.UpdateIssueStatusRequest;
 import com.bugboard26.modules.issue.service.IssueService;
+import com.bugboard26.modules.issue.dto.IssueStatsResponse;
+import com.bugboard26.modules.issue.service.IssueStatsService;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.domain.Sort;
 
 
+
 import java.util.List;
 
 @RestController
@@ -26,7 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IssueController {
     
-    private final IssueService issueService; 
+    private final IssueService issueService;
+    private final IssueStatsService issueStatsService;  
 
     @GetMapping
     public ResponseEntity<Page<IssueResponse>> getAllIssues(
@@ -90,20 +94,14 @@ public class IssueController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/stats") 
+    public ResponseEntity<IssueStatsResponse> getStats() {
+        return ResponseEntity.ok(issueStatsService.getStats());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<IssueResponse> getIssueById(@PathVariable String id) {
         IssueResponse response = issueService.getIssueById(id);
         return ResponseEntity.ok(response);
     }
-
-
-
-    
-    
-    
-
-
-
-
-
 }
