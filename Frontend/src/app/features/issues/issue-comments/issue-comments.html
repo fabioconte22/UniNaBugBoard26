@@ -2,9 +2,7 @@
     <h2 id="titolo-commenti" class="h5 mb-3">
         Commenti e cronologia
         @if (!loading() && !loadError()) {
-            <span class="text-body-secondary fw-normal">
-                ({{ commentCount() }} {{ commentCount() === 1 ? 'commento' : 'commenti' }})
-            </span>
+            <span class="text-body-secondary fw-normal">({{ commentCount() }} {{ commentCount() === 1 ? 'commento' : 'commenti' }})</span>
         }
     </h2>
 

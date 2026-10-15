@@ -1,0 +1,91 @@
+<section class="mb-5" aria-labelledby="titolo-panoramica">
+    <h2 id="titolo-panoramica" class="h5 mb-3">Panoramica</h2>
+
+    @if (loading()) {
+        <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            Caricamento in corso…
+        </div>
+    } @else if (error(); as message) {
+        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Riprova</button>
+        </div>
+    } @else if (stats(); as stats) {
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="text-body-secondary small">Aperte</div>
+                    <div class="fs-2 fw-semibold">{{ open() }}</div>
+                    <div class="text-body-secondary small">da fare e in corso</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="text-body-secondary small">In corso</div>
+                    <div class="fs-2 fw-semibold">{{ stats.byStatus.IN_PROGRESS }}</div>
+                    <div class="text-body-secondary small">qualcuno ci sta lavorando</div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div
+                    class="border rounded p-3 h-100"
+                    [class.border-warning]="auth.isAdmin() && stats.byStatus.RESOLVED > 0"
+                    [class.bg-warning-subtle]="auth.isAdmin() && stats.byStatus.RESOLVED > 0"
+                >
+                    <div class="text-body-secondary small">Da chiudere</div>
+                    <div class="fs-2 fw-semibold">{{ stats.byStatus.RESOLVED }}</div>
+                    <div class="text-body-secondary small">
+                        {{ auth.isAdmin() ? 'risolte, aspettano la tua verifica' : 'risolte, in attesa di verifica' }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="text-body-secondary small">Chiuse</div>
+                    <div class="fs-2 fw-semibold">{{ stats.byStatus.CLOSED }}</div>
+                    <div class="text-body-secondary small">su {{ total() }} in totale</div>
+                </div>
+            </div>
+        </div>
+
+        @if (total() === 0) {
+            <p class="text-body-secondary mb-0">Non ci sono ancora issue: i grafici compariranno con la prima.</p>
+        } @else {
+            <div class="row g-4">
+                <div class="col-12 col-lg-4">
+                    <h3 class="h6">Per stato</h3>
+                    <div class="chart-box">
+                        @if (statusChart(); as config) {
+                            <app-chart-canvas [config]="config" [label]="statusSummary()" />
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8">
+                    <h3 class="h6">Create e chiuse nelle ultime 8 settimane</h3>
+                    <div class="chart-box">
+                        @if (trendChart(); as config) {
+                            <app-chart-canvas [config]="config" [label]="trendSummary()" />
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h3 class="h6">Per tipo</h3>
+                    <div class="chart-box">
+                        @if (typeChart(); as config) {
+                            <app-chart-canvas [config]="config" [label]="typeSummary()" />
+                        }
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <h3 class="h6">Aperte per priorità</h3>
+                    <div class="chart-box">
+                        @if (priorityChart(); as config) {
+                            <app-chart-canvas [config]="config" [label]="prioritySummary()" />
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</section>
