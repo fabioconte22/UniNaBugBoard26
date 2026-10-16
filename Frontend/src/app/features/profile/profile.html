@@ -33,7 +33,7 @@
                 <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
                     <div class="mb-3">
                         <label for="current-password" class="form-label">Password attuale</label>
-                        <div class="input-group has-validation">
+                        <div class="password-field">
                             <input
                                 #currentPasswordInput
                                 id="current-password"
@@ -43,7 +43,7 @@
                                 autocomplete="current-password"
                                 [class.is-invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid"
                             />
-                            <button class="btn btn-outline-secondary" [appRevealPassword]="currentPasswordInput"></button>
+                            <button [appRevealPassword]="currentPasswordInput"></button>
                             @if (form.controls.currentPassword.touched && form.controls.currentPassword.invalid) {
                                 <div class="invalid-feedback">Inserisci la password attuale.</div>
                             }
@@ -52,7 +52,7 @@
 
                     <div class="mb-3">
                         <label for="new-password" class="form-label">Nuova password</label>
-                        <div class="input-group has-validation">
+                        <div class="password-field">
                             <input
                                 #newPasswordInput
                                 id="new-password"
@@ -62,7 +62,7 @@
                                 autocomplete="new-password"
                                 [class.is-invalid]="form.controls.newPassword.touched && form.controls.newPassword.invalid"
                             />
-                            <button class="btn btn-outline-secondary" [appRevealPassword]="newPasswordInput"></button>
+                            <button [appRevealPassword]="newPasswordInput"></button>
                             @if (form.controls.newPassword.touched && form.controls.newPassword.hasError('required')) {
                                 <div class="invalid-feedback">La nuova password è obbligatoria.</div>
                             } @else if (form.controls.newPassword.touched && form.controls.newPassword.hasError('minlength')) {
@@ -76,7 +76,7 @@
 
                     <div class="mb-4">
                         <label for="confirm-password" class="form-label">Ripeti la nuova password</label>
-                        <div class="input-group has-validation">
+                        <div class="password-field">
                             <input
                                 #confirmPasswordInput
                                 id="confirm-password"
@@ -86,7 +86,7 @@
                                 autocomplete="new-password"
                                 [class.is-invalid]="confirmInvalid()"
                             />
-                            <button class="btn btn-outline-secondary" [appRevealPassword]="confirmPasswordInput"></button>
+                            <button [appRevealPassword]="confirmPasswordInput"></button>
                             @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
                                 <div class="invalid-feedback">Ripeti la nuova password.</div>
                             } @else if (confirmInvalid()) {
