@@ -14,16 +14,17 @@ import {
     TYPE_LABELS,
 } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
+import { ThemeService } from '../../../core/theme/theme.service';
 
 const STATUSES: IssueStatus[] = ['TODO', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'];
 const TYPES: IssueType[] = ['BUG', 'FEATURE', 'QUESTION', 'DOCUMENTATION'];
 const PRIORITIES: IssuePriority[] = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW'];
 
 const STATUS_COLOR: Record<IssueStatus, string> = {
-    TODO: '--bs-secondary',
-    IN_PROGRESS: '--bs-primary',
-    RESOLVED: '--bs-success',
-    CLOSED: '--bs-dark',
+    TODO: '--app-status-todo',
+    IN_PROGRESS: '--app-status-in-progress',
+    RESOLVED: '--app-status-resolved',
+    CLOSED: '--app-status-closed',
 };
 const PRIORITY_COLOR: Record<IssuePriority, string> = {
     CRITICAL: '--bs-danger',
@@ -47,6 +48,7 @@ const ANIMATION = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 export class DashboardOverview {
     private readonly issueService = inject(IssueService);
     protected readonly auth = inject(AuthService);
+    private readonly theme = inject(ThemeService);
 
     protected readonly stats = signal<IssueStats | null>(null);
     protected readonly loading = signal(false);
@@ -62,23 +64,36 @@ export class DashboardOverview {
         return stats ? stats.byStatus.TODO + stats.byStatus.IN_PROGRESS : 0;
     });
 
+    private readonly palette = computed(() => {
+        this.theme.theme();
+        return {
+            text: cssColor('--bs-secondary-color'),
+            grid: cssColor('--bs-border-color'),
+            surface: cssColor('--bs-body-bg'),
+            status: (status: IssueStatus) => cssColor(STATUS_COLOR[status]),
+            priority: (priority: IssuePriority) => cssColor(PRIORITY_COLOR[priority]),
+        };
+    });
+
     protected readonly statusChart = computed<ChartConfiguration | null>(() => {
         const stats = this.stats();
         if (!stats) return null;
+        const palette = this.palette();
         return {
             type: 'doughnut',
             data: {
                 labels: STATUSES.map((status) => STATUS_LABELS[status]),
                 datasets: [{
                     data: STATUSES.map((status) => stats.byStatus[status]),
-                    backgroundColor: STATUSES.map((status) => cssColor(STATUS_COLOR[status])),
+                    backgroundColor: STATUSES.map(palette.status),
+                    borderColor: palette.surface,
                 }],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: ANIMATION ? undefined : false,
-                plugins: { legend: { position: 'bottom' } },
+                plugins: { legend: { position: 'bottom', labels: { color: palette.text } } },
             },
         };
     });
@@ -86,6 +101,7 @@ export class DashboardOverview {
     protected readonly trendChart = computed<ChartConfiguration | null>(() => {
         const stats = this.stats();
         if (!stats) return null;
+        const palette = this.palette();
         return {
             type: 'bar',
             data: {
@@ -94,12 +110,12 @@ export class DashboardOverview {
                     {
                         label: 'Create',
                         data: stats.lastWeeks.map((week) => week.created),
-                        backgroundColor: cssColor('--bs-primary'),
+                        backgroundColor: palette.status('IN_PROGRESS'),
                     },
                     {
                         label: 'Chiuse',
                         data: stats.lastWeeks.map((week) => week.closed),
-                        backgroundColor: cssColor('--bs-dark'),
+                        backgroundColor: palette.status('CLOSED'),
                     },
                 ],
             },
@@ -107,8 +123,11 @@ export class DashboardOverview {
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: ANIMATION ? undefined : false,
-                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-                plugins: { legend: { position: 'bottom' } },
+                scales: {
+                    x: axis(palette),
+                    y: { ...axis(palette), beginAtZero: true, ticks: { precision: 0, color: palette.text } },
+                },
+                plugins: { legend: { position: 'bottom', labels: { color: palette.text } } },
             },
         };
     });
@@ -116,15 +135,15 @@ export class DashboardOverview {
     protected readonly typeChart = computed<ChartConfiguration | null>(() => {
         const stats = this.stats();
         if (!stats) return null;
+        const palette = this.palette();
         return {
             type: 'bar',
             data: {
                 labels: TYPES.map((type) => TYPE_LABELS[type]),
-                
                 datasets: STATUSES.map((status) => ({
                     label: STATUS_LABELS[status],
                     data: TYPES.map((type) => stats.byTypeAndStatus[type][status]),
-                    backgroundColor: cssColor(STATUS_COLOR[status]),
+                    backgroundColor: palette.status(status),
                 })),
             },
             options: {
@@ -132,10 +151,10 @@ export class DashboardOverview {
                 maintainAspectRatio: false,
                 animation: ANIMATION ? undefined : false,
                 scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } },
+                    x: { ...axis(palette), stacked: true },
+                    y: { ...axis(palette), stacked: true, beginAtZero: true, ticks: { precision: 0, color: palette.text } },
                 },
-                plugins: { legend: { position: 'bottom' } },
+                plugins: { legend: { position: 'bottom', labels: { color: palette.text } } },
             },
         };
     });
@@ -143,6 +162,7 @@ export class DashboardOverview {
     protected readonly priorityChart = computed<ChartConfiguration | null>(() => {
         const stats = this.stats();
         if (!stats) return null;
+        const palette = this.palette();
         return {
             type: 'bar',
             data: {
@@ -150,7 +170,7 @@ export class DashboardOverview {
                 datasets: [{
                     label: 'Issue aperte',
                     data: PRIORITIES.map((priority) => stats.openByPriority[priority]),
-                    backgroundColor: PRIORITIES.map((priority) => cssColor(PRIORITY_COLOR[priority])),
+                    backgroundColor: PRIORITIES.map(palette.priority),
                 }],
             },
             options: {
@@ -158,7 +178,10 @@ export class DashboardOverview {
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: ANIMATION ? undefined : false,
-                scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+                scales: {
+                    x: { ...axis(palette), beginAtZero: true, ticks: { precision: 0, color: palette.text } },
+                    y: axis(palette),
+                },
                 plugins: { legend: { display: false } },
             },
         };
@@ -211,4 +234,12 @@ function weekLabel(weekStart: string): string {
 
 function describe(pairs: [string, number][]): string {
     return pairs.map(([label, value]) => `${label} ${value}`).join(', ');
+}
+
+function axis(palette: { text: string; grid: string }) {
+    return {
+        ticks: { color: palette.text },
+        grid: { color: palette.grid },
+        border: { color: palette.grid },
+    };
 }

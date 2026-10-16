@@ -1,8 +1,70 @@
-// Bootstrap: importato dai sorgenti SCSS (non dal CSS compilato) così da poter
-// sovrascrivere le variabili del tema prima dell'import quando servirà.
-@use 'bootstrap/scss/bootstrap';
+@use '@fontsource/ibm-plex-sans/latin-400' as plex-400;
+@use '@fontsource/ibm-plex-sans/latin-500' as plex-500;
+@use '@fontsource/ibm-plex-sans/latin-600' as plex-600;
+@use 'bootstrap-icons/font/bootstrap-icons';
+@use 'bootstrap/scss/bootstrap' with (
+    $primary: #1e4d9b,
+    $body-color: #1c2433,
+    $body-bg: #ffffff,
+    $border-color: #dfe5ee,
+    $link-color: #1e4d9b,
+    $font-family-sans-serif: ('IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif),
+    $headings-font-weight: 600,
+    $border-radius: 0.5rem,
+    $border-radius-sm: 0.375rem,
+    $border-radius-lg: 0.75rem,
+
+    $body-color-dark: #e6eaf0,
+    $body-bg-dark: #162133,
+    $body-secondary-bg-dark: #1e2b42,
+    $body-tertiary-bg-dark: #1a2639,
+    $border-color-dark: #2c3b56,
+    $link-color-dark: #8db2f2,
+    $link-hover-color-dark: #b9cff5,
+    $primary-text-emphasis-dark: #a9c4f5,
+    $primary-bg-subtle-dark: #1c335c,
+    $primary-border-subtle-dark: #2f4f86
+);
+
+:root,
+[data-bs-theme='light'] {
+    --app-page-bg: #f3f6fa;
+    --app-status-todo: #6c757d;
+    --app-status-in-progress: #1e4d9b;
+    --app-status-resolved: #198754;
+    --app-status-closed: #343a40;
+}
+
+[data-bs-theme='dark'] {
+    --app-page-bg: #0e1624;
+    --app-status-todo: #8d9ab0;
+    --app-status-in-progress: #5b8def;
+    --app-status-resolved: #4caf7d;
+    --app-status-closed: #c9d1dc;
+}
 
 html,
 body {
-  height: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: var(--app-page-bg);
+}
+.app-badge-closed {
+    background-color: var(--app-status-closed);
+    color: var(--app-page-bg);
+}
+
+.password-field {
+    position: relative;
+
+    > .form-control {
+        padding-right: 2.75rem;
+    }
+
+    > .form-control.is-invalid {
+        padding-right: 4.75rem;
+        background-position: right 2.75rem center;
+    }
 }

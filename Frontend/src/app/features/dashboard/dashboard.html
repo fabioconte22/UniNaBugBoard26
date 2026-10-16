@@ -3,16 +3,17 @@
 
     <app-dashboard-overview />
 
-    <section class="mb-5" aria-labelledby="titolo-assegnate">
-        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
-            <h2 id="titolo-assegnate" class="h5 mb-0">In carico a me</h2>
-            @if (!assignedLoading() && !assignedError() && assigned().length > 0) {
-                <span class="text-body-secondary small">
-                    {{ openAssignedCount() }} {{ openAssignedCount() === 1 ? 'aperta' : 'aperte' }}
-                    su {{ assigned().length }}
-                </span>
-            }
-        </div>
+    <section class="card mb-4" aria-labelledby="titolo-assegnate">
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+                <h2 id="titolo-assegnate" class="h5 mb-0">In carico a me</h2>
+                @if (!assignedLoading() && !assignedError() && assigned().length > 0) {
+                    <span class="text-body-secondary small">
+                        {{ openAssignedCount() }} {{ openAssignedCount() === 1 ? 'aperta' : 'aperte' }}
+                        su {{ assigned().length }}
+                    </span>
+                }
+            </div>
 
         @if (assignedLoading()) {
             <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
@@ -62,13 +63,15 @@
                 </table>
             </div>
         }
+        </div>
     </section>
 
-    <section aria-labelledby="titolo-mie">
-        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
-            <h2 id="titolo-mie" class="h5 mb-0">Le mie segnalazioni</h2>
-            <a class="btn btn-sm btn-outline-primary" routerLink="/issues/new">Nuova issue</a>
-        </div>
+    <section class="card" aria-labelledby="titolo-mie">
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+                <h2 id="titolo-mie" class="h5 mb-0">Le mie segnalazioni</h2>
+                <a class="btn btn-sm btn-outline-primary" routerLink="/issues/new">Nuova issue</a>
+            </div>
 
         @if (mineLoading()) {
             <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
@@ -112,5 +115,6 @@
                 </table>
             </div>
         }
+        </div>
     </section>
 </div>

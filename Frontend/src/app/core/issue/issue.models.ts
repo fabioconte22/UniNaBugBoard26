@@ -58,11 +58,11 @@ export const STATUS_BADGE: Record<IssueStatus, string> = {
     TODO: 'text-bg-secondary',
     IN_PROGRESS: 'text-bg-primary',
     RESOLVED: 'text-bg-success',
-    CLOSED: 'text-bg-dark',
+    CLOSED: 'app-badge-closed',
 }
 
 export const PRIORITY_BADGE: Record<IssuePriority, string> = {
-    LOW: 'text-bg-light border',
+    LOW: 'bg-body-tertiary text-body border',
     MEDIUM: 'text-bg-info',
     HIGH: 'text-bg-warning',
     CRITICAL: 'text-bg-danger',
