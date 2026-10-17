@@ -36,6 +36,7 @@ function normalize(text: string): string {
     selector: 'app-issue-detail',
     imports: [DatePipe, RouterLink, IssueComments],
     templateUrl: './issue-detail.html',
+    styleUrl: './issue-detail.scss',
 })
 export class IssueDetail {
     private readonly route = inject(ActivatedRoute);

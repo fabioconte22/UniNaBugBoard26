@@ -28,11 +28,15 @@
         <p class="mb-4" style="white-space: pre-wrap">{{ item.descrizione }}</p>
 
         @if (item.imageUrl) {
-            <img 
-                [src]="item.imageUrl"
-                [alt]="'Allegato della issue ' + item.titolo"
-                class="img-fluid rounded border mb-4"
-            />
+            <figure class="issue-image mb-4">
+                <a [href]="item.imageUrl" target="_blank" rel="noopener noreferrer">
+                    <img [src]="item.imageUrl" [alt]="'Allegato della issue ' + item.titolo" class="rounded border" />
+                </a>
+                <figcaption class="small text-body-secondary mt-2">
+                    <i class="bi bi-arrows-angle-expand" aria-hidden="true"></i>
+                    Clicca sull'immagine per aprirla a dimensione intera.
+                </figcaption>
+            </figure>
         }
 
         <dl class="row small text-body-secondary mb-0">
