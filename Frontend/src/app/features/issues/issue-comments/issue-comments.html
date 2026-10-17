@@ -50,7 +50,11 @@
             <button type="button" class="btn btn-sm btn-outline-danger" (click)="retry()">Riprova</button>
         </div>
     } @else if (comments().length === 0) {
-        <p class="text-body-secondary">Nessun commento. Scrivi il primo.</p>
+        <app-empty-state
+            icon="bi-chat-left-text"
+            title="Ancora nessun commento"
+            text="Usa il campo qui sopra per scrivere il primo."
+        />
     } @else {
         <ol class="list-unstyled d-flex flex-column gap-3 mb-0" reversed>
             @for (comment of newestFirst(); track comment.id) {

@@ -16,10 +16,11 @@ import {
     TYPE_LABELS,
 } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
+import { EmptyState } from '../../../core/ui/empty-state/empty-state';
 
 @Component({
     selector: 'app-issue-list',
-    imports: [DatePipe, RouterLink],
+    imports: [DatePipe, RouterLink, EmptyState],
     templateUrl: './issue-list.html',
 })
 export class IssueList {

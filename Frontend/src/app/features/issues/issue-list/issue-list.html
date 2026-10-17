@@ -7,7 +7,9 @@
             }
         </div>
 
-        <a class="btn btn-primary" routerLink="/issues/new">Nuova Issue</a>
+        <a class="btn btn-primary" routerLink="/issues/new">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuova issue
+        </a>
     </div>
 
     <div class="row g-2 mb-4">
@@ -69,12 +71,14 @@
             (click)="load()">Riprova</button>
         </div>
     } @else if (issues().length === 0) {
-        <p class="text-center text-body-secondary py-5 mb-0">
-            Nessuna issue corrisponde ai filtri selezionati
-        </p>
+        <app-empty-state
+            icon="bi-funnel"
+            title="Nessuna issue con questi filtri"
+            text="Prova a cambiare stato, tipo o priorità."
+        />
     } @else {
         <div class="table-responsive">
-            <table class="table align-middle">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th scope="col">Titolo</th>

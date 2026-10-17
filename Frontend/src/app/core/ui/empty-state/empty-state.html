@@ -1,0 +1,6 @@
+<i [class]="'bi ' + icon()" aria-hidden="true"></i>
+<p class="fw-semibold mt-2 mb-1">{{ title() }}</p>
+@if (text(); as text) {
+    <p class="text-body-secondary small mb-0">{{ text }}</p>
+}
+<div class="actions"><ng-content /></div>
