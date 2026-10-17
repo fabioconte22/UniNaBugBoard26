@@ -28,19 +28,17 @@
 
 :root,
 [data-bs-theme='light'] {
-    --app-page-bg: #f3f6fa;
-    --app-status-todo: #6c757d;
+    --app-status-todo: #d99a06;
     --app-status-in-progress: #1e4d9b;
     --app-status-resolved: #198754;
-    --app-status-closed: #343a40;
+    --app-status-closed: #6f42c1;
 }
 
 [data-bs-theme='dark'] {
-    --app-page-bg: #0e1624;
-    --app-status-todo: #8d9ab0;
+    --app-status-todo: #f2c046;
     --app-status-in-progress: #5b8def;
     --app-status-resolved: #4caf7d;
-    --app-status-closed: #c9d1dc;
+    --app-status-closed: #a98eda;
 }
 
 html,
@@ -51,9 +49,42 @@ body {
 body {
     background-color: var(--app-page-bg);
 }
-.app-badge-closed {
-    background-color: var(--app-status-closed);
-    color: var(--app-page-bg);
+
+.badge.app-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-pill);
+    background-color: var(--bs-tertiary-bg);
+    color: var(--bs-body-color);
+    font-weight: 500;
+
+    &::before {
+        content: '';
+        width: 0.55em;
+        height: 0.55em;
+        border-radius: 50%;
+        background-color: var(--dot);
+    }
+}
+
+.app-status-todo { --dot: var(--app-status-todo); }
+.app-status-in-progress { --dot: var(--app-status-in-progress); }
+.app-status-resolved { --dot: var(--app-status-resolved); }
+.app-status-closed { --dot: var(--app-status-closed); }
+
+.badge.app-priority {
+    border-radius: var(--bs-border-radius-pill);
+    font-weight: 500;
+}
+
+.table > thead th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
 }
 
 .password-field {

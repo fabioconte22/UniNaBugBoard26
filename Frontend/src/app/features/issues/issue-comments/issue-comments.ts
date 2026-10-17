@@ -7,12 +7,13 @@ import { notBlank } from '../../../core/forms/validators';
 import { describeHttpError } from '../../../core/http/describe-error';
 import { IssueComment, STATUS_BADGE, STATUS_LABELS } from '../../../core/issue/issue.models';
 import { IssueService } from '../../../core/issue/issue.service';
+import { EmptyState } from '../../../core/ui/empty-state/empty-state';
 
 const MAX_COMMENT_LENGTH = 2000; 
 
 @Component({
     selector: 'app-issue-comments',
-    imports: [DatePipe, ReactiveFormsModule],
+    imports: [DatePipe, ReactiveFormsModule, EmptyState],
     templateUrl: './issue-comments.html',
     styleUrl: './issue-comments.scss',
 })

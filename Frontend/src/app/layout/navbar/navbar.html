@@ -77,13 +77,14 @@
                             type="button"
                             class="btn btn-sm btn-outline-secondary dropdown-toggle"
                             data-bs-toggle="dropdown"
+                            data-bs-display="static"
                             aria-expanded="false"
                         >
                             {{ auth.user()?.nome }}
                             <span class="badge text-bg-secondary ms-1">{{ auth.user()?.role }}</span>
                         </button>
 
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        <ul class="dropdown-menu dropdown-menu-md-end">
                             <li>
                                 <span class="dropdown-item-text small text-body-secondary">{{ auth.user()?.email }}</span>
                             </li>

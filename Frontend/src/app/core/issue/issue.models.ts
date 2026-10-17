@@ -55,17 +55,17 @@ export const TYPE_LABELS: Record<IssueType, string> = {
 };
 
 export const STATUS_BADGE: Record<IssueStatus, string> = {
-    TODO: 'text-bg-secondary',
-    IN_PROGRESS: 'text-bg-primary',
-    RESOLVED: 'text-bg-success',
-    CLOSED: 'app-badge-closed',
+    TODO: 'app-status app-status-todo',
+    IN_PROGRESS: 'app-status app-status-in-progress',
+    RESOLVED: 'app-status app-status-resolved',
+    CLOSED: 'app-status app-status-closed',
 }
 
 export const PRIORITY_BADGE: Record<IssuePriority, string> = {
-    LOW: 'bg-body-tertiary text-body border',
-    MEDIUM: 'text-bg-info',
-    HIGH: 'text-bg-warning',
-    CRITICAL: 'text-bg-danger',
+    LOW: 'app-priority bg-body-tertiary text-body-secondary',
+    MEDIUM: 'app-priority bg-info-subtle text-info-emphasis',
+    HIGH: 'app-priority bg-warning-subtle text-warning-emphasis',
+    CRITICAL: 'app-priority bg-danger-subtle text-danger-emphasis',
 }
 
 export interface CreateIssueRequest {

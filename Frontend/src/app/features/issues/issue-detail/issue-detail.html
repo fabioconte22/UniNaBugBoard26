@@ -22,7 +22,7 @@
         <div class="d-flex flex-wrap gap-2 mb-4">
             <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
             <span [class]="'badge ' + priorityBadge[item.priority]">{{ priorityLabels[item.priority] }}</span>
-            <span class="badge text-bg-light border">{{ typeLabels[item.type] }}</span>
+            <span class="badge rounded-pill bg-body-tertiary text-body-secondary border fw-medium">{{ typeLabels[item.type] }}</span>
         </div>
 
         <p class="mb-4" style="white-space: pre-wrap">{{ item.descrizione }}</p>
