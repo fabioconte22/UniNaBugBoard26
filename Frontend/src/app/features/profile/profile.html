@@ -2,106 +2,114 @@
     <h1 class="h3 mb-4">Profilo</h1>
 
     @if (auth.user(); as user) {
-        <div class="row g-5">
+        <div class="row g-4">
             <section class="col-12 col-lg-5" aria-labelledby="titolo-dati">
-                <h2 id="titolo-dati" class="h5 mb-3">I tuoi dati</h2>
-                <dl class="row mb-0">
-                    <dt class="col-4">Nome</dt>
-                    <dd class="col-8">{{ user.nome }} {{ user.cognome }}</dd>
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 id="titolo-dati" class="h5 mb-3">I tuoi dati</h2>
+                        <dl class="row mb-0">
+                            <dt class="col-4">Nome</dt>
+                            <dd class="col-8">{{ user.nome }} {{ user.cognome }}</dd>
 
-                    <dt class="col-4">Email</dt>
-                    <dd class="col-8 text-break">{{ user.email }}</dd>
+                            <dt class="col-4">Email</dt>
+                            <dd class="col-8 text-break">{{ user.email }}</dd>
 
-                    <dt class="col-4">Ruolo</dt>
-                    <dd class="col-8 mb-0">{{ user.role === 'ADMIN' ? 'Amministratore' : 'Utente' }}</dd>
-                </dl>
+                            <dt class="col-4">Ruolo</dt>
+                            <dd class="col-8 mb-0">{{ user.role === 'ADMIN' ? 'Amministratore' : 'Utente' }}</dd>
+                        </dl>
+                    </div>
+                </div>
             </section>
 
             <section class="col-12 col-lg-7" aria-labelledby="titolo-password">
-                <h2 id="titolo-password" class="h5 mb-3">Cambia password</h2>
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 id="titolo-password" class="h5 mb-3">Cambia password</h2>
 
-                @if (saved()) {
-                    <div class="alert alert-success" role="status">
-                        Password aggiornata. Dal prossimo accesso usa quella nuova.
-                    </div>
-                }
-
-                @if (errorMessage(); as message) {
-                    <div class="alert alert-danger" role="alert">{{ message }}</div>
-                }
-
-                <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
-                    <div class="mb-3">
-                        <label for="current-password" class="form-label">Password attuale</label>
-                        <div class="password-field">
-                            <input
-                                #currentPasswordInput
-                                id="current-password"
-                                type="password"
-                                class="form-control"
-                                formControlName="currentPassword"
-                                autocomplete="current-password"
-                                [class.is-invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid"
-                            />
-                            <button [appRevealPassword]="currentPasswordInput"></button>
-                            @if (form.controls.currentPassword.touched && form.controls.currentPassword.invalid) {
-                                <div class="invalid-feedback">Inserisci la password attuale.</div>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="new-password" class="form-label">Nuova password</label>
-                        <div class="password-field">
-                            <input
-                                #newPasswordInput
-                                id="new-password"
-                                type="password"
-                                class="form-control"
-                                formControlName="newPassword"
-                                autocomplete="new-password"
-                                [class.is-invalid]="form.controls.newPassword.touched && form.controls.newPassword.invalid"
-                            />
-                            <button [appRevealPassword]="newPasswordInput"></button>
-                            @if (form.controls.newPassword.touched && form.controls.newPassword.hasError('required')) {
-                                <div class="invalid-feedback">La nuova password è obbligatoria.</div>
-                            } @else if (form.controls.newPassword.touched && form.controls.newPassword.hasError('minlength')) {
-                                <div class="invalid-feedback">La lunghezza deve essere di almeno 6 caratteri.</div>
-                            }
-                        </div>
-                        @if (!(form.controls.newPassword.touched && form.controls.newPassword.invalid)) {
-                            <div class="form-text">Almeno 6 caratteri.</div>
+                        @if (saved()) {
+                            <div class="alert alert-success" role="status">
+                                Password aggiornata. Dal prossimo accesso usa quella nuova.
+                            </div>
                         }
-                    </div>
 
-                    <div class="mb-4">
-                        <label for="confirm-password" class="form-label">Ripeti la nuova password</label>
-                        <div class="password-field">
-                            <input
-                                #confirmPasswordInput
-                                id="confirm-password"
-                                type="password"
-                                class="form-control"
-                                formControlName="confirmPassword"
-                                autocomplete="new-password"
-                                [class.is-invalid]="confirmInvalid()"
-                            />
-                            <button [appRevealPassword]="confirmPasswordInput"></button>
-                            @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
-                                <div class="invalid-feedback">Ripeti la nuova password.</div>
-                            } @else if (confirmInvalid()) {
-                                <div class="invalid-feedback">Le due password non coincidono.</div>
-                            }
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" [disabled]="saving()">
-                        @if (saving()) {
-                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                        @if (errorMessage(); as message) {
+                            <div class="alert alert-danger" role="alert">{{ message }}</div>
                         }
-                        Cambia password
-                    </button>
-                </form>
+
+                        <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
+                            <div class="mb-3">
+                                <label for="current-password" class="form-label">Password attuale</label>
+                                <div class="password-field">
+                                    <input
+                                        #currentPasswordInput
+                                        id="current-password"
+                                        type="password"
+                                        class="form-control"
+                                        formControlName="currentPassword"
+                                        autocomplete="current-password"
+                                        [class.is-invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid"
+                                    />
+                                    <button [appRevealPassword]="currentPasswordInput"></button>
+                                    @if (form.controls.currentPassword.touched && form.controls.currentPassword.invalid) {
+                                        <div class="invalid-feedback">Inserisci la password attuale.</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="new-password" class="form-label">Nuova password</label>
+                                <div class="password-field">
+                                    <input
+                                        #newPasswordInput
+                                        id="new-password"
+                                        type="password"
+                                        class="form-control"
+                                        formControlName="newPassword"
+                                        autocomplete="new-password"
+                                        [class.is-invalid]="form.controls.newPassword.touched && form.controls.newPassword.invalid"
+                                    />
+                                    <button [appRevealPassword]="newPasswordInput"></button>
+                                    @if (form.controls.newPassword.touched && form.controls.newPassword.hasError('required')) {
+                                        <div class="invalid-feedback">La nuova password è obbligatoria.</div>
+                                    } @else if (form.controls.newPassword.touched && form.controls.newPassword.hasError('minlength')) {
+                                        <div class="invalid-feedback">La lunghezza deve essere di almeno 6 caratteri.</div>
+                                    }
+                                </div>
+                                @if (!(form.controls.newPassword.touched && form.controls.newPassword.invalid)) {
+                                    <div class="form-text">Almeno 6 caratteri.</div>
+                                }
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="confirm-password" class="form-label">Ripeti la nuova password</label>
+                                <div class="password-field">
+                                    <input
+                                        #confirmPasswordInput
+                                        id="confirm-password"
+                                        type="password"
+                                        class="form-control"
+                                        formControlName="confirmPassword"
+                                        autocomplete="new-password"
+                                        [class.is-invalid]="confirmInvalid()"
+                                    />
+                                    <button [appRevealPassword]="confirmPasswordInput"></button>
+                                    @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
+                                        <div class="invalid-feedback">Ripeti la nuova password.</div>
+                                    } @else if (confirmInvalid()) {
+                                        <div class="invalid-feedback">Le due password non coincidono.</div>
+                                    }
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" [disabled]="saving()">
+                                @if (saving()) {
+                                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                }
+                                Cambia password
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </section>
         </div>
     }

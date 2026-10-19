@@ -1,4 +1,9 @@
-<main class ="container py-5">
+<main class="container py-5">
+    @if (!auth.isAuthenticated()) {
+        <div class="position-fixed top-0 end-0 p-3">
+            <app-theme-toggle />
+        </div>
+    }
     <section class="text-center mx-auto" style="max-width: 46rem;">
         <img
             src="logo.png"
@@ -30,9 +35,10 @@
 
     <section class="row g-4 mt-5">
         <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="h5 card-title">Segnala</h2>
+                    <i class="bi bi-bug fs-3 text-primary-emphasis" aria-hidden="true"></i>
+                    <h2 class="h5 card-title mt-2">Segnala</h2>
                     <p class="card-text text-body-secondary mb-0">
                         Apri una segnalazione con titolo, descrizione e priorità, 
                         così che il problema resti tracciato e non si perda.
@@ -42,9 +48,10 @@
         </div>
 
         <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="h5 card-title">Assegna e traccia</h2>
+                    <i class="bi bi-signpost-split fs-3 text-primary-emphasis" aria-hidden="true"></i>
+                    <h2 class="h5 card-title mt-2">Assegna e traccia</h2>
                     <p class="card-text text-body-secondary mb-0">
                         Ogni segnalazione ha un responsabile e uno stato che ne racconta l'avanzamento, 
                         dall'apertura alla chiusura.
@@ -54,9 +61,10 @@
         </div>
 
         <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
+            <div class="card h-100">
                 <div class="card-body">
-                    <h2 class="h5 card-title">Ruoli distinti</h2>
+                    <i class="bi bi-people fs-3 text-primary-emphasis" aria-hidden="true"></i>
+                    <h2 class="h5 card-title mt-2">Ruoli distinti</h2>
                     <p class="card-text text-body-secondary mb-0">
                        Chi usa il sistema segue le proprie segnalazioni; 
                        l'amministratore gestisce utenti e assegnazioni.

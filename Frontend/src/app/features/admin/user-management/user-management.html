@@ -1,225 +1,235 @@
 <div class="container py-4">
-    <h1 class="h3 mb-1">Utenti</h1>
+    <h1 class="h3 mb-4">Utenti</h1>
     
-    <div class="row g-5">
+    <div class="row g-4">
         <section class="col-12 col-lg-7">
-            <div class="d-flex align-items-baseline justify-content-between mb-3">
-                <h2 class="h5 mb-0">Elenco</h2>
-                @if (!usersLoading() && !usersError()) {
-                    <span class="text-body-secondary small">
-                        {{ users().length }} {{ users().length === 1 ? 'utente' : 'utenti'}}
-                    </span>
-                }
-            </div>
-
-            @if (usersLoading()) {
-                <div class="d-flex align-items-center gap-2 text-body-secondary py-4">
-                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                    Caricamento in corso...
-                </div>
-            } @else if (usersError(); as message) {
-                <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
-                    <span> {{ message }}</span>
-                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadUsers()">Riprova</button>
-                </div>
-            } @else {
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nome</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Ruolo</th>
-                                <th scope="col"><span class="visually-hidden">Azioni</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (user of users(); track user.id) {
-                                <tr>
-                                    <td>{{ user.cognome }} {{ user.nome }}</td>
-                                    <td class="text-body-secondary small">{{ user.email }}</td>
-                                    <td>
-                                        <span [class]="'badge ' + (user.role === 'ADMIN' ? 'text-bg-primary' : 'text-bg-secondary')">
-                                            {{ user.role === 'ADMIN' ? 'Amministratore' : 'Utente'}}
-                                        </span>
-                                    </td>
-                                    <td class="text-end">
-                                        <button
-                                            type="button"
-                                            class="btn btn-sm btn-outline-secondary text-nowrap"
-                                            (click)="startReset(user)"
-                                        >
-                                            Reimposta password
-                                            <span class="visually-hidden">di {{ user.nome }} {{ user.cognome }}</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
-                @if (resetDone(); as user) {
-                    <div class="alert alert-success" role="status">
-                        Password di <strong>{{ user.nome }} {{ user.cognome }}</strong> reimpostata.
-                        Comunicagliela: l'app non invia email.
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-baseline justify-content-between mb-3">
+                        <h2 class="h5 mb-0">Elenco</h2>
+                        @if (!usersLoading() && !usersError()) {
+                            <span class="text-body-secondary small">
+                                {{ users().length }} {{ users().length === 1 ? 'utente' : 'utenti'}}
+                            </span>
+                        }
                     </div>
-                }
 
-                @if (resetTarget(); as target) {
-                    <app-password-reset
-                        [user]="target"
-                        (done)="onResetDone($event)"
-                        (cancelled)="resetTarget.set(null)"
-                    />
-                }
-            }
+                    @if (usersLoading()) {
+                        <div class="d-flex align-items-center gap-2 text-body-secondary py-4">
+                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            Caricamento in corso...
+                        </div>
+                    } @else if (usersError(); as message) {
+                        <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+                            <span> {{ message }}</span>
+                            <button type="button" class="btn btn-sm btn-outline-danger" (click)="loadUsers()">Riprova</button>
+                        </div>
+                    } @else {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Ruolo</th>
+                                        <th scope="col"><span class="visually-hidden">Azioni</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (user of users(); track user.id) {
+                                        <tr>
+                                            <td>{{ user.cognome }} {{ user.nome }}</td>
+                                            <td class="text-body-secondary small">{{ user.email }}</td>
+                                            <td>
+                                                <span [class]="'badge ' + (user.role === 'ADMIN' ? 'text-bg-primary' : 'text-bg-secondary')">
+                                                    {{ user.role === 'ADMIN' ? 'Amministratore' : 'Utente'}}
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-outline-secondary"
+                                                    title="Reimposta password"
+                                                    (click)="startReset(user)"
+                                                >
+                                                    <i class="bi bi-key" aria-hidden="true"></i>
+                                                    <span class="visually-hidden">Reimposta la password di {{ user.nome }} {{ user.cognome }}</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (resetDone(); as user) {
+                            <div class="alert alert-success" role="status">
+                                Password di <strong>{{ user.nome }} {{ user.cognome }}</strong> reimpostata.
+                                Comunicagliela: l'app non invia email.
+                            </div>
+                        }
+
+                        @if (resetTarget(); as target) {
+                            <app-password-reset
+                                [user]="target"
+                                (done)="onResetDone($event)"
+                                (cancelled)="resetTarget.set(null)"
+                            />
+                        }
+                    }
+                </div>
+            </div>
         </section>
 
+        
         <section class="col-12 col-lg-5">
-            <h2 class="h5 mb-3">Nuovo Utente</h2>
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5 mb-3">Nuovo utente</h2>
 
-            @if (createdUser(); as user) {
-                <div class="alert alert-success" role="status">
-                    Account creato per <strong>{{ user.nome }} {{ user.cognome }}</strong>
-                    ({{ user.email }}), con ruolo {{ user.role === 'ADMIN' ? 'amministratore' : 'utente'}}.
-                </div>
-            }
-
-            @if(errorMessage(); as message) {
-                <div class="alert alert-danger" role="alert">{{ message }}</div>
-            }
-
-            <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
-                <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-6">
-                        <label for="nome" class="form-label">Nome</label>
-                        <input
-                            id="nome"
-                            type="text"
-                            class="form-control"
-                            formControlName="nome"
-                            autocomplete="off"
-                            [class.is-invalid]="form.controls.nome.touched && form.controls.nome.invalid"
-                        />
-                        @if (form.controls.nome.touched && form.controls.nome.invalid) {
-                            <div class="invalid-feedback">Il nome è obbligatorio.</div>
-                        }
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label for="cognome" class="form-label">Cognome</label>
-                        <input
-                            id="cognome"
-                            type="text"
-                            class="form-control"
-                            formControlName="cognome"
-                            autocomplete="off"
-                            [class.is-invalid]="form.controls.cognome.touched && form.controls.cognome.invalid"
-                        />
-                        @if (form.controls.cognome.touched && form.controls.cognome.invalid) {
-                            <div class="invalid-feedback">Il cognome è obbligatorio.</div>
-                        }
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input
-                        id="email"
-                        type="email"
-                        class="form-control"
-                        formControlName="email"
-                        autocomplete="off"
-                        [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
-                    />
-                    @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-                        <div class="invalid-feedback">L'email è obbligatoria</div>
-                    }
-                    @if (form.controls.email.touched && form.controls.email.hasError('email')) {
-                        <div class="invalid-feedback">Il formato dell'email non è valido.</div>
-                    }
-                </div>
-
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password iniziale</label>
-                    <input
-                        id="password"
-                        type="password"
-                        class="form-control"
-                        formControlName="password"
-                        autocomplete="new-password"
-                        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
-                    />
-                    @if (form.controls.password.touched && form.controls.password.hasError('required')) {
-                        <div class="invalid-feedback">La password è obbligatoria.</div>
-                    } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
-                        <div class="invalid-feedback">La lunghezza deve essere di almeno 6 caratteri.</div>
-                    } @else {
-                        <div class="form-text">
-                            Almeno 6 caratteri. Va comunicata: l'app non invia email.
+                    @if (createdUser(); as user) {
+                        <div class="alert alert-success" role="status">
+                            Account creato per <strong>{{ user.nome }} {{ user.cognome }}</strong>
+                            ({{ user.email }}), con ruolo {{ user.role === 'ADMIN' ? 'amministratore' : 'utente'}}.
                         </div>
                     }
-                </div>
 
-                <div class="mb-4">
-                    <label for="ruolo" class="form-label">Ruolo</label>
-                    <select id="ruolo" class="form-select" formControlName="role">
-                        <option value="USER">Utente</option>
-                        <option value="ADMIN">Amministratore</option>
-                    </select>
-                </div>
+                    @if(errorMessage(); as message) {
+                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    }
 
-                @if (pending(); as riepilogo) {
-                    <section
-                        class="border rounded p-3 bg-body-tertiary"
-                        aria-labelledby="riepilogo-utente"
-                        (keydown.escape)="cancel()"
-                    >
-                        <p id="riepilogo-utente" class="fw-semibold mb-2">
-                            Confermi la creazione di questo account?
-                        </p>  
-                        
-                        <dl class="row small mb-3">
-                            <dt class="col-4">Nome</dt>
-                            <dd class="col-8">{{ riepilogo.nome }} {{riepilogo.cognome }}</dd>
-
-                            <dt class="col-4">Email</dt>
-                            <dd class="col-8 text-break">{{ riepilogo.email }}</dd>
-
-                            <dt class="col-4">Ruolo</dt>
-                            <dd class="col-8 mb-0">
-                                @if (riepilogo.role === 'ADMIN') {
-                                    <span class="badge text-bg-danger">Amministratore</span>
-                                    <span class="d-block text-danger mt-1">Avrà accesso a tutta l'area di gestione.</span>
-                                }@else {
-                                    Utente
+                    <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
+                        <div class="row g-3 mb-3">
+                            <div class="col-12 col-md-6">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input
+                                    id="nome"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="nome"
+                                    autocomplete="off"
+                                    [class.is-invalid]="form.controls.nome.touched && form.controls.nome.invalid"
+                                />
+                                @if (form.controls.nome.touched && form.controls.nome.invalid) {
+                                    <div class="invalid-feedback">Il nome è obbligatorio.</div>
                                 }
-                             </dd>
-                        </dl>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="cognome" class="form-label">Cognome</label>
+                                <input
+                                    id="cognome"
+                                    type="text"
+                                    class="form-control"
+                                    formControlName="cognome"
+                                    autocomplete="off"
+                                    [class.is-invalid]="form.controls.cognome.touched && form.controls.cognome.invalid"
+                                />
+                                @if (form.controls.cognome.touched && form.controls.cognome.invalid) {
+                                    <div class="invalid-feedback">Il cognome è obbligatorio.</div>
+                                }
+                            </div>
+                        </div>
 
-                        <div class="d-flex flex-wrap gap-2">
-                            <button
-                                #confirmButton
-                                type="button"
-                                class="btn btn-primary"
-                                aria-describedby="riepilogo-utente"
-                                [disabled]="loading()"
-                                (click)="confirm()"
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input
+                                id="email"
+                                type="email"
+                                class="form-control"
+                                formControlName="email"
+                                autocomplete="off"
+                                [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+                            />
+                            @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+                                <div class="invalid-feedback">L'email è obbligatoria</div>
+                            }
+                            @if (form.controls.email.touched && form.controls.email.hasError('email')) {
+                                <div class="invalid-feedback">Il formato dell'email non è valido.</div>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password iniziale</label>
+                            <input
+                                id="password"
+                                type="password"
+                                class="form-control"
+                                formControlName="password"
+                                autocomplete="new-password"
+                                [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+                            />
+                            @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+                                <div class="invalid-feedback">La password è obbligatoria.</div>
+                            } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+                                <div class="invalid-feedback">La lunghezza deve essere di almeno 6 caratteri.</div>
+                            } @else {
+                                <div class="form-text">
+                                    Almeno 6 caratteri. Va comunicata: l'app non invia email.
+                                </div>
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="ruolo" class="form-label">Ruolo</label>
+                            <select id="ruolo" class="form-select" formControlName="role">
+                                <option value="USER">Utente</option>
+                                <option value="ADMIN">Amministratore</option>
+                            </select>
+                        </div>
+
+                        @if (pending(); as riepilogo) {
+                            <section
+                                class="border rounded p-3 bg-body-tertiary"
+                                aria-labelledby="riepilogo-utente"
+                                (keydown.escape)="cancel()"
                             >
-                                @if (loading()) {
-                                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                                }
-                                Conferma e crea
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
-                                Modifica
-                            </button>
-                        </div>  
-                    </section>
-                } @else {
-                    <button #submitButton type="submit" class="btn btn-primary">Crea utente</button>
-                }
-            </form>
+                                <p id="riepilogo-utente" class="fw-semibold mb-2">
+                                    Confermi la creazione di questo account?
+                                </p>  
+                                
+                                <dl class="row small mb-3">
+                                    <dt class="col-4">Nome</dt>
+                                    <dd class="col-8">{{ riepilogo.nome }} {{riepilogo.cognome }}</dd>
+
+                                    <dt class="col-4">Email</dt>
+                                    <dd class="col-8 text-break">{{ riepilogo.email }}</dd>
+
+                                    <dt class="col-4">Ruolo</dt>
+                                    <dd class="col-8 mb-0">
+                                        @if (riepilogo.role === 'ADMIN') {
+                                            <span class="badge text-bg-danger">Amministratore</span>
+                                            <span class="d-block text-danger mt-1">Avrà accesso a tutta l'area di gestione.</span>
+                                        }@else {
+                                            Utente
+                                        }
+                                    </dd>
+                                </dl>
+
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button
+                                        #confirmButton
+                                        type="button"
+                                        class="btn btn-primary"
+                                        aria-describedby="riepilogo-utente"
+                                        [disabled]="loading()"
+                                        (click)="confirm()"
+                                    >
+                                        @if (loading()) {
+                                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                        }
+                                        Conferma e crea
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                                        Modifica
+                                    </button>
+                                </div>  
+                            </section>
+                        } @else {
+                            <button #submitButton type="submit" class="btn btn-primary">Crea utente</button>
+                        }
+                    </form>
+                </div>
+            </div>
         </section>
     </div>
 </div>
