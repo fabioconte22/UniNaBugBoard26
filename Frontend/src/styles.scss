@@ -28,6 +28,7 @@
 
 :root,
 [data-bs-theme='light'] {
+    --app-page-bg: #f3f6fa;
     --app-status-todo: #d99a06;
     --app-status-in-progress: #1e4d9b;
     --app-status-resolved: #198754;
@@ -35,6 +36,7 @@
 }
 
 [data-bs-theme='dark'] {
+    --app-page-bg: #0e1624;
     --app-status-todo: #f2c046;
     --app-status-in-progress: #5b8def;
     --app-status-resolved: #4caf7d;

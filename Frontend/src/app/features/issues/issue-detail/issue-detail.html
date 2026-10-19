@@ -1,5 +1,7 @@
 <div class="container py-4">
-    <a class="btn btn-link px-0 mb-3" routerLink="/issues">← Torna all'elenco </a>
+    <a class="btn btn-link px-0 mb-3" routerLink="/issues">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Torna all'elenco
+    </a>
     @if (imageNotUploaded) {
         <div class="alert alert-warning" role="alert">
             La issue è stata creata, ma l'immagine non è stata caricata.
@@ -17,7 +19,7 @@
             (click)="load()">Riprova</button>
         </div>
     } @else if (issue(); as item) {
-        <h1 class="h3">{{ item.titolo }}</h1>
+        <h1 class="h3 mb-2">{{ item.titolo }}</h1>
 
         <div class="d-flex flex-wrap gap-2 mb-4">
             <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
@@ -25,182 +27,207 @@
             <span class="badge rounded-pill bg-body-tertiary text-body-secondary border fw-medium">{{ typeLabels[item.type] }}</span>
         </div>
 
-        <p class="mb-4" style="white-space: pre-wrap">{{ item.descrizione }}</p>
+        <!-- Su desktop: contenuto a sinistra, dati e azioni a destra. Su telefono una colonna sola. -->
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                <section class="card h-100" aria-labelledby="titolo-descrizione">
+                    <div class="card-body">
+                        <h2 id="titolo-descrizione" class="h6 mb-3">Descrizione</h2>
+                        <p class="mb-0" style="white-space: pre-wrap">{{ item.descrizione }}</p>
 
-        @if (item.imageUrl) {
-            <figure class="issue-image mb-4">
-                <a [href]="item.imageUrl" target="_blank" rel="noopener noreferrer">
-                    <img [src]="item.imageUrl" [alt]="'Allegato della issue ' + item.titolo" class="rounded border" />
-                </a>
-                <figcaption class="small text-body-secondary mt-2">
-                    <i class="bi bi-arrows-angle-expand" aria-hidden="true"></i>
-                    Clicca sull'immagine per aprirla a dimensione intera.
-                </figcaption>
-            </figure>
-        }
-
-        <dl class="row small text-body-secondary mb-0">
-            <dt class="col-sm-3">Creata da</dt>
-            <dd class="col-sm-9">{{ item.creatorEmail }}</dd>
-            
-            <dt class="col-sm-3">Assegnata a</dt>
-            <dd class="col-sm-9">{{ item.assigneeEmail ?? 'Non assegnata' }}</dd>
-
-            <dt class="col-sm-3">Creata il</dt>
-            <dd class="col-sm-9">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
-        </dl>
-
-        <section class="border rounded p-3 mt-4" aria-labelledby="titolo-avanzamento">
-            <h2 id="titolo-avanzamento" class="h6 mb-2">Avanzamento</h2>
-
-            @if (statusError(); as message) {
-                <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
-            }
-
-            @if (pendingAction(); as action) {
-                <div (keydown.escape)="cancelStatus()">
-                    <p class="mb-3">
-                        <span class="text-body-secondary">Passaggio:</span>
-                        <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
-                        →
-                        <span [class]="'badge ' + statusBadge[action.to]">{{ statusLabels[action.to] }}</span>
-                    </p>
-
-                    @if (action.note !== 'none') {
-                        <label for="nota-stato" class="form-label small">
-                            {{ action.note === 'required' ? 'Report di risoluzione' : 'Motivo della riapertura (facoltativo)' }}
-                        </label>
-                        <textarea
-                            #statusNoteInput
-                            id="nota-stato"
-                            rows="3"
-                            class="form-control"
-                            [attr.maxlength]="maxNoteLength"
-                            [class.is-invalid]="noteAttempted() && !statusNote().trim()"
-                            [value]="statusNote()"
-                            (input)="statusNote.set(statusNoteInput.value)"
-                            (keydown.meta.enter)="confirmStatusFromKeyboard($event)"
-                            (keydown.control.enter)="confirmStatusFromKeyboard($event)"
-                        ></textarea>
-                        @if (noteAttempted() && !statusNote().trim()) {
-                            <div class="invalid-feedback">Scrivi un breve report di quello che è stato fatto.</div>
-                        }
-                        <div class="form-text">{{ statusNote().length }} / {{ maxNoteLength }}</div>
-                    }
-
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        <button
-                            #statusConfirm
-                            type="button"
-                            class="btn btn-primary"
-                            [disabled]="statusSaving()"
-                            (click)="confirmStatus()"
-                        >
-                            @if (statusSaving()) {
-                                <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                            }
-                            Conferma
-                        </button>
-                        <button type="button" class="btn btn-outline-secondary" (click)="cancelStatus()">
-                            Annulla
-                        </button>
-                    </div>
-                </div>
-            } @else {
-                @if (statusActions().length > 0) {
-                    <div class="d-flex flex-wrap gap-2 mb-2">
-                        @for (action of statusActions(); track action.to) {
-                            <button
-                                #statusActionButton
-                                type="button"
-                                [class]="'btn btn-sm ' + action.style"
-                                (click)="chooseAction(action)"
-                            >
-                                {{ action.label }}
-                            </button>
+                        @if (item.imageUrl) {
+                            <figure class="issue-image mt-4 mb-0">
+                                <a [href]="item.imageUrl" target="_blank" rel="noopener noreferrer">
+                                    <img [src]="item.imageUrl" [alt]="'Allegato della issue ' + item.titolo" class="rounded border" />
+                                </a>
+                                <figcaption class="small text-body-secondary mt-2">
+                                    <i class="bi bi-arrows-angle-expand" aria-hidden="true"></i>
+                                    Clicca sull'immagine per aprirla a dimensione intera.
+                                </figcaption>
+                            </figure>
                         }
                     </div>
-                }
-                @if (statusHint(); as hint) {
-                    <p class="small text-body-secondary mb-0">{{ hint }}</p>
-                }
-            }
-        </section>
+                </section>
+            </div>
 
-        @if (canAssign()) {
-            <section class="border rounded p-3 mt-4">
-                <h2 class="h6 mb-3">Assegnazione</h2>
+            <div class="col-12 col-lg-4 d-flex flex-column gap-4">
+                <section class="card" aria-labelledby="titolo-dettagli">
+                    <div class="card-body">
+                        <h2 id="titolo-dettagli" class="h6 mb-3">Dettagli</h2>
+                        <dl class="small mb-0">
+                            <dt class="text-body-secondary fw-normal">Creata da</dt>
+                            <dd class="text-break">{{ item.creatorEmail }}</dd>
 
-                @if (assignError(); as message) {
-                    <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
-                }
-                @if (assignSuccess()) {
-                    <div class="alert alert-success py-2" role="status">
-                        Bug assegnato a {{ item.assigneeEmail }}
+                            <dt class="text-body-secondary fw-normal">Assegnata a</dt>
+                            <dd class="text-break">{{ item.assigneeEmail ?? 'Non assegnata' }}</dd>
+
+                            <dt class="text-body-secondary fw-normal">Creata il</dt>
+                            <dd class="mb-0">{{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+                        </dl>
                     </div>
-                }
+                </section>
 
-                <div class="d-flex flex-wrap align-items-start gap-2">
-                    <div style="flex: 1 1 16rem; max-width: 26rem">
-                        <label for="assegnatario" class="visually-hidden">
-                            Cerca un utente per nome o email
-                        </label>
-                        <input
-                            id="assegnatario"
-                            #assigneeInput
-                            type="search"
-                            class="form-control"
-                            placeholder="Cerca per nome, cognome o email"
-                            autocomplete="off"
-                            [value]="assigneeQuery()"
-                            (input)="onAssigneeQuery(assigneeInput.value)"
-                            (keydown.enter)="onAssigneeEnter($event)"
-                        />
+                <section class="card" aria-labelledby="titolo-avanzamento">
+                    <div class="card-body">
+                        <h2 id="titolo-avanzamento" class="h6 mb-2">Avanzamento</h2>
 
-                        @if (assigneeQuery() && !selectedAssignee()) {
-                            @if (suggestions().length === 0) {
-                                <div class="form-text">Nessun utente corrisponde a "{{ assigneeQuery() }}".</div>
-                            } @else {
-                                <div class="list-group mt-1">
-                                    @for (user of suggestions(); track user.id) {
+                        @if (statusError(); as message) {
+                            <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
+                        }
+
+                        @if (pendingAction(); as action) {
+                            <div (keydown.escape)="cancelStatus()">
+                                <p class="mb-3">
+                                    <span class="text-body-secondary">Passaggio:</span>
+                                    <span [class]="'badge ' + statusBadge[item.status]">{{ statusLabels[item.status] }}</span>
+                                    →
+                                    <span [class]="'badge ' + statusBadge[action.to]">{{ statusLabels[action.to] }}</span>
+                                </p>
+
+                                @if (action.note !== 'none') {
+                                    <label for="nota-stato" class="form-label small">
+                                        {{ action.note === 'required' ? 'Report di risoluzione' : 'Motivo della riapertura (facoltativo)' }}
+                                    </label>
+                                    <textarea
+                                        #statusNoteInput
+                                        id="nota-stato"
+                                        rows="3"
+                                        class="form-control"
+                                        [attr.maxlength]="maxNoteLength"
+                                        [class.is-invalid]="noteAttempted() && !statusNote().trim()"
+                                        [value]="statusNote()"
+                                        (input)="statusNote.set(statusNoteInput.value)"
+                                        (keydown.meta.enter)="confirmStatusFromKeyboard($event)"
+                                        (keydown.control.enter)="confirmStatusFromKeyboard($event)"
+                                    ></textarea>
+                                    @if (noteAttempted() && !statusNote().trim()) {
+                                        <div class="invalid-feedback">Scrivi un breve report di quello che è stato fatto.</div>
+                                    }
+                                    <div class="form-text">{{ statusNote().length }} / {{ maxNoteLength }}</div>
+                                }
+
+                                <div class="d-flex flex-wrap gap-2 mt-3">
+                                    <button
+                                        #statusConfirm
+                                        type="button"
+                                        class="btn btn-primary"
+                                        [disabled]="statusSaving()"
+                                        (click)="confirmStatus()"
+                                    >
+                                        @if (statusSaving()) {
+                                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                        }
+                                        Conferma
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" (click)="cancelStatus()">
+                                        Annulla
+                                    </button>
+                                </div>
+                            </div>
+                        } @else {
+                            @if (statusActions().length > 0) {
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    @for (action of statusActions(); track action.to) {
                                         <button
+                                            #statusActionButton
                                             type="button"
-                                            class="list-group-item list-group-item-action"
-                                            (click)="pickAssignee(user)"
+                                            [class]="'btn btn-sm ' + action.style"
+                                            (click)="chooseAction(action)"
                                         >
-                                            {{ user.cognome }} {{ user.nome }}
-                                            <span class="d-block small text-body-secondary">{{ user.email }}</span>
+                                            {{ action.label }}
                                         </button>
                                     }
                                 </div>
-                                @if (hiddenMatches() > 0) {
-                                    <div class="form-text">
-                                        E altri {{ hiddenMatches() }}: scrivi qualche lettera in più.
-                                    </div>
-                                }
+                            }
+                            @if (statusHint(); as hint) {
+                                <p class="small text-body-secondary mb-0">{{ hint }}</p>
                             }
                         }
                     </div>
+                </section>
 
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        [disabled]="assigning() || !selectedAssignee() || selectedAssignee() === item.assigneeEmail"
-                        (click)="assign()"
-                    >
-                        @if (assigning()) {
-                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                        } 
-                        Assegna
-                    </button>
-                </div>
-            </section>
-        }@else if (auth.isAdmin()) {
-            <p class="text-body-secondary small mt-4 mb-0">
-                Solo le issue di tipo bug possono essere assegnate.
-            </p>
-        }
-        <app-issue-comments [issueId]="item.id" [refresh]="historyVersion()" />
+                @if (canAssign()) {
+                    <section class="card" aria-labelledby="titolo-assegnazione">
+                        <div class="card-body">
+                            <h2 id="titolo-assegnazione" class="h6 mb-3">Assegnazione</h2>
 
+                            @if (assignError(); as message) {
+                                <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
+                            }
+                            @if (assignSuccess()) {
+                                <div class="alert alert-success py-2" role="status">
+                                    Bug assegnato a {{ item.assigneeEmail }}
+                                </div>
+                            }
+
+                            <div class="d-flex flex-wrap align-items-start gap-2">
+                                <div style="flex: 1 1 16rem; max-width: 26rem">
+                                    <label for="assegnatario" class="visually-hidden">
+                                        Cerca un utente per nome o email
+                                    </label>
+                                    <input
+                                        id="assegnatario"
+                                        #assigneeInput
+                                        type="search"
+                                        class="form-control"
+                                        placeholder="Cerca per nome, cognome o email"
+                                        autocomplete="off"
+                                        [value]="assigneeQuery()"
+                                        (input)="onAssigneeQuery(assigneeInput.value)"
+                                        (keydown.enter)="onAssigneeEnter($event)"
+                                    />
+
+                                    @if (assigneeQuery() && !selectedAssignee()) {
+                                        @if (suggestions().length === 0) {
+                                            <div class="form-text">Nessun utente corrisponde a "{{ assigneeQuery() }}".</div>
+                                        } @else {
+                                            <div class="list-group mt-1">
+                                                @for (user of suggestions(); track user.id) {
+                                                    <button
+                                                        type="button"
+                                                        class="list-group-item list-group-item-action"
+                                                        (click)="pickAssignee(user)"
+                                                    >
+                                                        {{ user.cognome }} {{ user.nome }}
+                                                        <span class="d-block small text-body-secondary">{{ user.email }}</span>
+                                                    </button>
+                                                }
+                                            </div>
+                                            @if (hiddenMatches() > 0) {
+                                                <div class="form-text">
+                                                    E altri {{ hiddenMatches() }}: scrivi qualche lettera in più.
+                                                </div>
+                                            }
+                                        }
+                                    }
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    [disabled]="assigning() || !selectedAssignee() || selectedAssignee() === item.assigneeEmail"
+                                    (click)="assign()"
+                                >
+                                    @if (assigning()) {
+                                        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                    }
+                                    Assegna
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                } @else if (auth.isAdmin()) {
+                    <p class="text-body-secondary small mb-0">
+                        Solo le issue di tipo bug possono essere assegnate.
+                    </p>
+                }
+            </div>
+        </div>
+
+        <section class="card mt-4">
+            <div class="card-body">
+                <app-issue-comments [issueId]="item.id" [refresh]="historyVersion()" />
+            </div>
+        </section>
     }
 </div>

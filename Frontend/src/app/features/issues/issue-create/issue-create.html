@@ -1,154 +1,157 @@
 <div class="container py-4" style="max-width: 48rem;">
-    <a class="btn btn-link px-0 mb-3" routerLink="/issues">← Torna all'elenco</a>
+    <a class="btn btn-link px-0 mb-3" routerLink="/issues"><i class="bi bi-arrow-left" aria-hidden="true"></i> Torna all'elenco</a>
 
     <h1 class="h3 mb-4">Nuova issue</h1>
 
     @if (errorMessage(); as message) {
         <div class="alert alert-danger" role="alert">{{ message }}</div>
     }
-
-    <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
-        <div class="mb-3">
-            <label for="titolo" class="form-lable">Titolo</label>
-            <input
-                id="titolo"
-                type="text"
-                class="form-control"
-                formControlName="titolo"
-                maxlength="255"
-                [class.is-invalid]="form.controls.titolo.touched && form.controls.titolo.invalid"
-            />
-            @if (form.controls.titolo.touched && form.controls.titolo.invalid) {
-                <div class="invalid-feedback">Il titolo è obbligatorio.</div>
-            }
-        </div>
-
-        <div class="mb-3">
-            <label for="descrizione" class="form-label">Descrizione</label>
-            <textarea
-                id="descrizione"
-                rows="6"
-                class="form-control"
-                formControlName="descrizione"
-                maxlength="2000"
-                [class.is-invalid]="form.controls.descrizione.touched && form.controls.descrizione.invalid"
-            ></textarea>
-            <div class="form-text">{{ form.controls.descrizione.value.length }} / 2000</div>
-            @if (form.controls.descrizione.touched && form.controls.descrizione.invalid) {
-                <div class="invalid-feedback d-block">La descrizione è obbligatoria</div>
-            }
-        </div>
-
-        <div class="row g-3 mb-3">
-            <div class="col-12 col-mb-6">
-                <label for="tipo" class="form-label">Tipo</label>
-                <select
-                    id="tipo"
-                    class="form-select"
-                    formControlName="type"
-                    [class.is-invalid]="form.controls.type.touched && form.controls.type.invalid">
-                    
-                    <option value="" disabled>Scegli un tipo</option>
-                    @for(voce of typeOptions; track voce) {
-                        <option [value]="voce">{{ typeLabels[voce] }}</option>
+    <section class="card">
+        <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="submit()" novalidate appEnterNext>
+                <div class="mb-3">
+                    <label for="titolo" class="form-label">Titolo</label>
+                    <input
+                        id="titolo"
+                        type="text"
+                        class="form-control"
+                        formControlName="titolo"
+                        maxlength="255"
+                        [class.is-invalid]="form.controls.titolo.touched && form.controls.titolo.invalid"
+                    />
+                    @if (form.controls.titolo.touched && form.controls.titolo.invalid) {
+                        <div class="invalid-feedback">Il titolo è obbligatorio.</div>
                     }
-                </select>
-                @if(form.controls.type.touched && form.controls.type.invalid) {
-                    <div class="invalid-feedback">Il tipo è obbligatorio</div>
-                }
-            </div>
-
-            <div class="col-12 col-mb-6">
-                <label for="priorita" class="form-label">Priorità</label>
-                <select id="priorita" class="form-select" formControlName="priority">
-                    @for (voce of priorityOptions; track voce) {
-                        <option [value]="voce">{{ priorityLabels[voce] }}</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label for="immagine" class="form-label">Immagine (facoltativa)</label>
-
-            <div class="input-group has-validation">
-                <input
-                    #fileInput
-                    id="immagine"
-                    type="file"
-                    class="form-control"
-                    accept="image/png,image/jpeg,image/gif,image/webp"
-                    [class.is-invalid]="imageError()"
-                    (change)="onFileSelected($event)"
-                />
-
-                @if (image()) {
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        aria-label="Rimuovi il file selezionato"
-                        (click)="removeImage(fileInput)"
-                    > x </button>
-                }
-
-                 @if (imageError(); as message) {
-                    <div class="invalid-feedback">{{ message }}</div>
-                }
-            </div>
-
-            @if (!imageError()) {
-                <div class="form-text">PNG, JPEG, GIF o WebP, massimo 1MB</div>
-            }
-        </div>
-
-        @if (pending(); as riepilogo) {
-            <section
-                class="border rounded p-3 bg-body-tertiary"
-                aria-labelledby="riepilogo-issue"
-                (keydown.escape)="cancel()"
-            >
-                <p id="riepilogo-issue" class="fw-semibold mb-2">
-                    Confermi la creazione di questa issue?
-                </p>
-                
-                <dl class="row small mb-3">
-                     <dt class="col-4">Titolo</dt>
-                     <dd class="col-8 text-break">{{ riepilogo.titolo }}</dd>
-
-                     <dt class="col-4">Tipo</dt>
-                    <dd class="col-8">{{ typeLabels[riepilogo.type] }}</dd>
-
-                    <dt class="col-4">Priorità</dt>
-                    <dd class="col-8">{{ priorityLabels[riepilogo.priority] }}</dd>
-
-                    <dt class="col-4">Immagine</dt>
-                    <dd class="col-8 mb-0 text-break">{{ image()?.name ?? 'nessuna' }}</dd>     
-                </dl>
-
-                <div class="d-flex flex-wrap gap-2">
-                    <button
-                        #confirmButton
-                        type="button"
-                        class="btn btn-primary"
-                        aria-describedby="riepilogo-issue"
-                        [disabled]="loading()"
-                        (click)="confirm()"
-                    >
-                        @if (loading()) {
-                            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                        } 
-                        Conferma e crea   
-                </button>
-                <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
-                    Modifica
-                </button>
                 </div>
-            </section>
-        } @else {
-            <div class="d-flex gap-2">
-                <button #submitButton type="submit" class="btn btn-primary">Crea issue</button>
-                <a class="btn btn-outline-secondary" routerLink="/issues">Annulla</a>
-            </div>
-        }
-    </form>
+
+                <div class="mb-3">
+                    <label for="descrizione" class="form-label">Descrizione</label>
+                    <textarea
+                        id="descrizione"
+                        rows="6"
+                        class="form-control"
+                        formControlName="descrizione"
+                        maxlength="2000"
+                        [class.is-invalid]="form.controls.descrizione.touched && form.controls.descrizione.invalid"
+                    ></textarea>
+                    <div class="form-text">{{ form.controls.descrizione.value.length }} / 2000</div>
+                    @if (form.controls.descrizione.touched && form.controls.descrizione.invalid) {
+                        <div class="invalid-feedback d-block">La descrizione è obbligatoria</div>
+                    }
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-mb-6">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <select
+                            id="tipo"
+                            class="form-select"
+                            formControlName="type"
+                            [class.is-invalid]="form.controls.type.touched && form.controls.type.invalid">
+                            
+                            <option value="" disabled>Scegli un tipo</option>
+                            @for(voce of typeOptions; track voce) {
+                                <option [value]="voce">{{ typeLabels[voce] }}</option>
+                            }
+                        </select>
+                        @if(form.controls.type.touched && form.controls.type.invalid) {
+                            <div class="invalid-feedback">Il tipo è obbligatorio</div>
+                        }
+                    </div>
+
+                    <div class="col-12 col-mb-6">
+                        <label for="priorita" class="form-label">Priorità</label>
+                        <select id="priorita" class="form-select" formControlName="priority">
+                            @for (voce of priorityOptions; track voce) {
+                                <option [value]="voce">{{ priorityLabels[voce] }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="immagine" class="form-label">Immagine (facoltativa)</label>
+
+                    <div class="input-group has-validation">
+                        <input
+                            #fileInput
+                            id="immagine"
+                            type="file"
+                            class="form-control"
+                            accept="image/png,image/jpeg,image/gif,image/webp"
+                            [class.is-invalid]="imageError()"
+                            (change)="onFileSelected($event)"
+                        />
+
+                        @if (image()) {
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                aria-label="Rimuovi il file selezionato"
+                                (click)="removeImage(fileInput)"
+                            > x </button>
+                        }
+
+                        @if (imageError(); as message) {
+                            <div class="invalid-feedback">{{ message }}</div>
+                        }
+                    </div>
+
+                    @if (!imageError()) {
+                        <div class="form-text">PNG, JPEG, GIF o WebP, massimo 1MB</div>
+                    }
+                </div>
+
+                @if (pending(); as riepilogo) {
+                    <section
+                        class="border rounded p-3 bg-body-tertiary"
+                        aria-labelledby="riepilogo-issue"
+                        (keydown.escape)="cancel()"
+                    >
+                        <p id="riepilogo-issue" class="fw-semibold mb-2">
+                            Confermi la creazione di questa issue?
+                        </p>
+                        
+                        <dl class="row small mb-3">
+                            <dt class="col-4">Titolo</dt>
+                            <dd class="col-8 text-break">{{ riepilogo.titolo }}</dd>
+
+                            <dt class="col-4">Tipo</dt>
+                            <dd class="col-8">{{ typeLabels[riepilogo.type] }}</dd>
+
+                            <dt class="col-4">Priorità</dt>
+                            <dd class="col-8">{{ priorityLabels[riepilogo.priority] }}</dd>
+
+                            <dt class="col-4">Immagine</dt>
+                            <dd class="col-8 mb-0 text-break">{{ image()?.name ?? 'nessuna' }}</dd>     
+                        </dl>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button
+                                #confirmButton
+                                type="button"
+                                class="btn btn-primary"
+                                aria-describedby="riepilogo-issue"
+                                [disabled]="loading()"
+                                (click)="confirm()"
+                            >
+                                @if (loading()) {
+                                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                } 
+                                Conferma e crea   
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                            Modifica
+                        </button>
+                        </div>
+                    </section>
+                } @else {
+                    <div class="d-flex gap-2">
+                        <button #submitButton type="submit" class="btn btn-primary">Crea issue</button>
+                        <a class="btn btn-outline-secondary" routerLink="/issues">Annulla</a>
+                    </div>
+                }
+            </form>
+        </div>
+    </section>
 </div>

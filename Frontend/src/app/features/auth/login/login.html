@@ -1,10 +1,17 @@
-<div class="container d-flex align-items-center justify-content-center min-vh-100">
-    <div class="card shadow-sm" style="width: 100%; max-width: 26rem">
-        <div class="card-body p-4">
-            <h1 class="h4 mb-1">BugBoard26</h1>
-            <p class="text-body-secondary mb-4">Accedi per continuare.</p>
+<div class="position-fixed top-0 end-0 p-3">
+    <app-theme-toggle />
+</div>
 
-            @if(errorMessage(); as message) {
+<div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 py-5">
+    <div class="card w-100" style="max-width: 26rem">
+        <div class="card-body p-4">
+            <div class="text-center mb-4">
+                <img src="logo.png" alt="" width="64" height="64" class="mb-3" />
+                <h1 class="h4 mb-1">BugBoard26</h1>
+                <p class="text-body-secondary mb-0">Accedi per continuare.</p>
+            </div>
+
+            @if (errorMessage(); as message) {
                 <div class="alert alert-danger py-2" role="alert">{{ message }}</div>
             }
 
@@ -26,21 +33,25 @@
 
                 <div class="mb-4">
                     <label for="password" class="form-label">Password</label>
-                    <input 
-                        id="password"
-                        type="password"
-                        class="form-control"
-                        formControlName="password"
-                        autocomplete="current-password"
-                        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
-                    />
-                    @if (form.controls.password.touched && form.controls.password.invalid) {
-                        <div class="invalid-feedback">La password è obbligatoria.</div>
-                    }
+                    <div class="password-field">
+                        <input
+                            #passwordInput
+                            id="password"
+                            type="password"
+                            class="form-control"
+                            formControlName="password"
+                            autocomplete="current-password"
+                            [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+                        />
+                        <button [appRevealPassword]="passwordInput"></button>
+                        @if (form.controls.password.touched && form.controls.password.invalid) {
+                            <div class="invalid-feedback">La password è obbligatoria.</div>
+                        }
+                    </div>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-100" [disabled]="loading()">
-                    @if (loading()){
+                    @if (loading()) {
                         <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                     }
                     Accedi
@@ -48,4 +59,8 @@
             </form>
         </div>
     </div>
+
+    <a class="btn btn-link mt-3" routerLink="/">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i> Torna alla pagina iniziale
+    </a>
 </div>

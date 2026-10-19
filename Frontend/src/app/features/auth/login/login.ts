@@ -1,13 +1,15 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { EnterNext } from '../../../core/forms/enter-next';
+import { RevealPassword } from '../../../core/forms/reveal-password/reveal-password';
+import { ThemeToggle } from '../../../core/theme/theme-toggle/theme-toggle';
 
 @Component({
     selector: 'app-login',
-    imports: [ReactiveFormsModule, EnterNext],
+    imports: [ReactiveFormsModule, RouterLink, EnterNext, RevealPassword, ThemeToggle],
     templateUrl: './login.html',
 })
 

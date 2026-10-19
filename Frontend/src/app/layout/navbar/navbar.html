@@ -62,16 +62,9 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2 py-2 py-md-0">
-                    <button
-                        type="button"
-                        class="btn btn-sm btn-outline-secondary"
-                        [attr.aria-label]="theme.theme() === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro'"
-                        [attr.title]="theme.theme() === 'dark' ? 'Tema chiaro' : 'Tema scuro'"
-                        (click)="theme.toggle()"
-                    >
-                        <i [class]="theme.theme() === 'dark' ? 'bi bi-sun' : 'bi bi-moon-stars'" aria-hidden="true"></i>
-                    </button>
-
+                  
+                    <app-theme-toggle />
+                    
                     <div class="dropdown">
                         <button
                             type="button"

@@ -1,17 +1,16 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
-import { ThemeService } from '../../core/theme/theme.service';
+import { ThemeToggle } from '../../core/theme/theme-toggle/theme-toggle';
 
 @Component({
     selector: 'app-navbar', 
-    imports: [RouterLink, RouterLinkActive],
+    imports: [RouterLink, RouterLinkActive, ThemeToggle],
     templateUrl: './navbar.html',
 })
 export class Navbar {
     private readonly router = inject(Router);
-    protected readonly auth = inject(AuthService); 
-    protected readonly theme = inject(ThemeService); 
+    protected readonly auth = inject(AuthService);  
     protected readonly menuOpen = signal(false); 
 
     protected toggleMenu(): void {
