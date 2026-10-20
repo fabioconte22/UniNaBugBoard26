@@ -39,6 +39,11 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.NOT_FOUND, "Risorsa non trovata. Controlla l' URL della richiesta.");
     }
 
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotificationNotFound(NotificationNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage()); 
+    }
+
     @ExceptionHandler(IssueNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleIssueNotFound(IssueNotFoundException ex){
         return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());

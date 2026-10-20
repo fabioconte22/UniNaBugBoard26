@@ -1,6 +1,7 @@
 package com.bugboard26.modules.issue.service;
 
 import com.bugboard26.modules.auth.service.AuthService;
+import com.bugboard26.modules.notification.service.NotificationService;
 import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.model.Comment;
@@ -35,6 +36,7 @@ public class IssueService {
     private final FileStorageService fileStorageService;
     private final AuthService authService;
     private final CommentRepository commentRepository;
+    private final NotificationService notificationService; 
 
     public IssueResponse createIssue(CreateIssueRequest request, String creatorEmail) {
         IssuePriority priorityToSet = request.getPriority() != null ? request.getPriority() : IssuePriority.LOW;
@@ -193,6 +195,9 @@ public class IssueService {
                 .issue(saved)
                 .build());
 
+        if (to == IssueStatus.RESOLVED) {
+            notificationService.notifyIssueResolved(saved.getId(), saved.getTitolo(), saved.getCreatorEmail(), callerEmail);
+        }
         return toResponse(saved);
     }
 
