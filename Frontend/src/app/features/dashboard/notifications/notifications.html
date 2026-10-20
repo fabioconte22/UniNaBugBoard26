@@ -1,0 +1,24 @@
+@if (notifications.count() > 0) {
+    <section class="card mb-4 border-primary-subtle" aria-labelledby="titolo-novita">
+        <div class="card-body">
+            <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+                <h2 id="titolo-novita" class="h5 mb-0">
+                    <i class="bi bi-bell text-primary-emphasis me-1" aria-hidden="true"></i>
+                    Novità
+                </h2>
+                <a class="small" routerLink="/notifications">Tutte le notifiche</a>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                @for (notification of notifications.unread(); track notification.id) {
+                    <li class="list-group-item px-0">
+                        <app-notification-item
+                            [notification]="notification"
+                            (markRead)="notifications.markAsRead(notification.id)"
+                        />
+                    </li>
+                }
+            </ul>
+        </div>
+    </section>
+}

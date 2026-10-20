@@ -1,0 +1,41 @@
+<div class="container py-4" style="max-width: 48rem;">
+    <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-4">
+        <h1 class="h3 mb-0">Notifiche</h1>
+        @if (!loading() && !error() && items().length > 0) {
+            <span class="text-body-secondary small">
+                {{ unreadCount() }} da leggere su {{ items().length }}
+            </span>
+        }
+    </div>
+
+    <section class="card">
+        <div class="card-body">
+            @if (loading()) {
+                <div class="d-flex align-items-center gap-2 text-body-secondary py-3">
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    Caricamento in corso…
+                </div>
+            } @else if (error(); as message) {
+                <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3 mb-0" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="load()">Riprova</button>
+                </div>
+            } @else if (items().length === 0) {
+                <app-empty-state
+                    icon="bi-bell"
+                    title="Nessuna notifica"
+                    text="Quando una issue che hai segnalato viene risolta, l'avviso compare qui."
+                />
+            } @else {
+                <ul class="list-group list-group-flush">
+                    @for (item of items(); track item.id) {
+                        <li class="list-group-item px-0">
+                            <app-notification-item [notification]="item" (markRead)="markRead(item.id)" />
+                        </li>
+                    }
+                </ul>
+                <p class="small text-body-secondary mt-3 mb-0">Sono mostrate le ultime 50 notifiche.</p>
+            }
+        </div>
+    </section>
+</div>

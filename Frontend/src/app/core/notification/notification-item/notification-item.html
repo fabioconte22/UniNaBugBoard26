@@ -1,0 +1,30 @@
+@let item = notification();
+<i
+    class="bi bi-check-circle-fill fs-5 lh-1 mt-1"
+    [class.text-success]="!item.readAt"
+    [class.text-body-tertiary]="item.readAt"
+    aria-hidden="true"
+></i>
+<div class="flex-grow-1" [class.text-body-secondary]="item.readAt">
+    <div>
+        La issue
+        <a [routerLink]="['/issues', item.issueId]" (click)="open()">«{{ item.issueTitolo }}»</a>
+        che hai segnalato è stata risolta da
+        {{ item.actorNome ? item.actorNome + ' ' + item.actorCognome : item.actorEmail }}.
+    </div>
+    <div class="small text-body-secondary">
+        {{ item.createdAt | date: 'dd/MM/yyyy HH:mm' }}
+        @if (!item.readAt) {
+            <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis ms-1">Nuova</span>
+        }
+    </div>
+</div>
+@if (!item.readAt) {
+    <button
+        type="button"
+        class="btn-close"
+        aria-label="Segna come letta"
+        title="Segna come letta"
+        (click)="markRead.emit()"
+    ></button>
+}

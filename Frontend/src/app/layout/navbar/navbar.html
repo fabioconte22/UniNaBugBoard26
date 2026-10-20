@@ -62,7 +62,22 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-2 py-2 py-md-0">
-                  
+                    
+                    <a
+                        class="btn btn-sm btn-outline-secondary position-relative"
+                        routerLink="/notifications"
+                        [attr.aria-label]="notifications.count() === 0 ? 'Nessuna notifica' : notifications.count() === 1 ? '1 notifica non letta' : notifications.count() + ' notifiche non lette'"
+                        [attr.title]="notifications.count() === 0 ? 'Nessuna notifica' : 'Notifiche non lette: ' + notifications.count()"
+                        (click)="closeMenu()"
+                    >
+                        <i class="bi bi-bell" aria-hidden="true"></i>
+                        @if (notifications.count() > 0) {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill text-bg-danger" aria-hidden="true">
+                                {{ notifications.count() }}
+                            </span>
+                        }
+                    </a>
+
                     <app-theme-toggle />
                     
                     <div class="dropdown">

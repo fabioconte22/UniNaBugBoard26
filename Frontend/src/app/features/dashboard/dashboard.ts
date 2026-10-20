@@ -17,13 +17,14 @@ import {
 import { IssueService } from '../../core/issue/issue.service';
 import { DashboardOverview } from './overview/overview';
 import { EmptyState } from '../../core/ui/empty-state/empty-state';
+import { DashboardNotifications } from './notifications/notifications';
 
 const PRIORITY_ORDER: Record<IssuePriority, number> = {CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
 const OPEN_STATUSES: IssueStatus[] = ['TODO', 'IN_PROGRESS'];
 
 @Component({
     selector: 'app-dashboard',
-    imports: [DatePipe, RouterLink, DashboardOverview, EmptyState],
+    imports: [DatePipe, RouterLink, DashboardNotifications, DashboardOverview, EmptyState],
     templateUrl: './dashboard.html',  
 })
 export class Dashboard {
