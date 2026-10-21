@@ -21,6 +21,10 @@
 
     <properties>
         <java.version>21</java.version>
+        
+        <!-- Byte Buddy (usato da Mockito e Hibernate) in una versione che supporta anche Java 23,la JDK installata in locale; 
+        quella portata da Spring Boot 3.2.5 arriva a Java 22. -->
+        <byte-buddy.version>1.15.11</byte-buddy.version>
     </properties>
 
     <dependencies>
@@ -85,6 +89,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Database in memoria per i test: i test non dipendono da Postgres né da Docker -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -114,6 +125,27 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+
+            <!-- Copertura dei test: rapporto in target/site/jacoco, letto anche da SonarQube -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
