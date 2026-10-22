@@ -8,8 +8,8 @@ import com.bugboard26.modules.issue.model.Issue;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
 import com.bugboard26.shared.exception.IssueNotFoundException;
-import com.bugboard26.modules.auth.dto.UserResponse;
-import com.bugboard26.modules.auth.service.AuthService;
+import com.bugboard26.shared.user.UserDirectory;
+import com.bugboard26.shared.user.UserSummary;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
-    private final AuthService authService; 
+    private final UserDirectory userDirectory; 
 
     public CommentResponse addComment(String issueId, CreateCommentRequest request, String authorEmail) {
         Issue issue = issueRepository.findById(issueId)
@@ -38,7 +38,7 @@ public class CommentService {
                 .build();
 
         Comment saved = commentRepository.save(comment);
-        return toResponse(saved, authService.findUsersByEmails(List.of(authorEmail)));
+        return toResponse(saved, userDirectory.findByEmails(List.of(authorEmail)));
     }
 
     public List<CommentResponse> getComments(String issueId) {
@@ -47,7 +47,7 @@ public class CommentService {
         }
         List<Comment> comments = commentRepository.findByIssueIdOrderByCreatedAtAsc(issueId);
 
-        Map<String, UserResponse> authors = authService.findUsersByEmails(
+        Map<String, UserSummary> authors = userDirectory.findByEmails(
             comments.stream().map(Comment::getAuthorEmail).collect(Collectors.toSet()));
         
         return comments.stream()
@@ -55,8 +55,8 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    private CommentResponse toResponse(Comment comment, Map<String, UserResponse> authors) {
-        UserResponse author = authors.get(comment.getAuthorEmail());
+    private CommentResponse toResponse(Comment comment, Map<String, UserSummary> authors) {
+        UserSummary author = authors.get(comment.getAuthorEmail());
         return new CommentResponse(
                 comment.getId(),
                 comment.getContent(),

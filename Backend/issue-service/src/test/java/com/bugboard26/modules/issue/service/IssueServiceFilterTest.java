@@ -1,6 +1,5 @@
 package com.bugboard26.modules.issue.service;
 
-import com.bugboard26.modules.auth.service.AuthService;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.model.Issue;
 import com.bugboard26.modules.issue.model.IssuePriority;
@@ -9,6 +8,7 @@ import com.bugboard26.modules.issue.model.IssueType;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
 import com.bugboard26.modules.notification.service.NotificationService;
+import com.bugboard26.shared.user.UserDirectory;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class IssueServiceFilterTest {
         issueService = new IssueService(
             issueRepository, 
             mock(FileStorageService.class),
-            mock(AuthService.class),
+            mock(UserDirectory.class),
             commentRepository, 
             mock(NotificationService.class)); 
         

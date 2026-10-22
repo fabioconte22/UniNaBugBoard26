@@ -1,6 +1,5 @@
 package com.bugboard26.modules.issue.service;
 
-import com.bugboard26.modules.auth.service.AuthService;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.model.Comment;
 import com.bugboard26.modules.issue.model.CommentKind;
@@ -11,6 +10,7 @@ import com.bugboard26.modules.issue.model.IssueType;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
 import com.bugboard26.modules.notification.service.NotificationService;
+import com.bugboard26.shared.user.UserDirectory;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
 import com.bugboard26.shared.exception.InvalidStatusTransitionException;
 import com.bugboard26.shared.exception.IssueAccessDeniedException;
@@ -49,7 +49,7 @@ class IssueServiceUpdateStatusTest {
     @Mock
     private FileStorageService fileStorageService;
     @Mock
-    private AuthService authService;
+    private UserDirectory userDirectory;
     @Mock
     private CommentRepository commentRepository;
     @Mock

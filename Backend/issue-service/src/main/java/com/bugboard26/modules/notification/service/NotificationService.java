@@ -1,7 +1,7 @@
 package com.bugboard26.modules.notification.service;
 
-import com.bugboard26.modules.auth.dto.UserResponse;
-import com.bugboard26.modules.auth.service.AuthService;
+import com.bugboard26.shared.user.UserDirectory;
+import com.bugboard26.shared.user.UserSummary;
 import com.bugboard26.modules.notification.dto.NotificationResponse;
 import com.bugboard26.modules.notification.model.Notification;
 import com.bugboard26.modules.notification.model.NotificationKind;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor 
 public class NotificationService {
     private final NotificationRepository notificationRepository; 
-    private final AuthService authService; 
+    private final UserDirectory userDirectory; 
 
     public void notifyIssueResolved(String issueId, String issueTitolo, String reporterEmail, String resolverEmail) {
         if (reporterEmail.equals(resolverEmail)) {
@@ -58,14 +58,14 @@ public class NotificationService {
     }
 
     private List<NotificationResponse> toResponses(List<Notification> notifications) {
-        Map<String, UserResponse> actors = authService.findUsersByEmails(notifications.stream().map(Notification::getActorEmail)
+        Map<String, UserSummary> actors = userDirectory.findByEmails(notifications.stream().map(Notification::getActorEmail)
                                                     .collect(Collectors.toSet())); 
         
         return notifications.stream().map(notification -> toResponse(notification, actors)).toList();
     }
 
-    private NotificationResponse toResponse(Notification notification, Map<String, UserResponse> actors) {
-        UserResponse actor = actors.get(notification.getActorEmail());
+    private NotificationResponse toResponse(Notification notification, Map<String, UserSummary> actors) {
+        UserSummary actor = actors.get(notification.getActorEmail());
         return new NotificationResponse(
                 notification.getId(),
                 notification.getKind(),

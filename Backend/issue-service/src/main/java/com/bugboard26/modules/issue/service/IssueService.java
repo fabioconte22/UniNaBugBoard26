@@ -1,6 +1,6 @@
 package com.bugboard26.modules.issue.service;
 
-import com.bugboard26.modules.auth.service.AuthService;
+import com.bugboard26.shared.user.UserDirectory;
 import com.bugboard26.modules.notification.service.NotificationService;
 import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
@@ -34,7 +34,7 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
     private final FileStorageService fileStorageService;
-    private final AuthService authService;
+    private final UserDirectory userDirectory;
     private final CommentRepository commentRepository;
     private final NotificationService notificationService; 
 
@@ -133,7 +133,7 @@ public class IssueService {
             throw new InvalidIssueTypeForAssignmentException();
         }
 
-        authService.ensureUserExists(assigneeEmail);
+        userDirectory.ensureUserExists(assigneeEmail);
 
         issue.setAssigneeEmail(assigneeEmail);
         Issue saved = issueRepository.save(issue); 

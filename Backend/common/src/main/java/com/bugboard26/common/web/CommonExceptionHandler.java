@@ -21,13 +21,13 @@ public class CommonExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>(); 
         ex.getBindingResult().getFieldErrors()
-                .forEach(error -> errors.put(errors.getField(), error.getDefaultMessage())); 
+                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage())); 
         return ApiErrors.response(HttpStatus.BAD_REQUEST, "Dati inviati non validi", errors); 
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleMalformedJson(HttpMessageNotReadableException ex) {
-        return ApiErrors.response(HttpStatus.BAD_REQUEST, "Il corpo della richiesta non è valido"); 
+        return ApiErrors.response(HttpStatus.BAD_REQUEST, "Il corpo della richiesta non è valido."); 
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

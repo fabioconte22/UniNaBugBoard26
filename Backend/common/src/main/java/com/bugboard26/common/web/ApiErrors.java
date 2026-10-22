@@ -18,6 +18,8 @@ public final class ApiErrors {
         body.put("status", status.value()); 
         body.put("error", status.getReasonPhrase()); 
         body.put("message", message); 
+
+        return body; 
     }
 
     public static ResponseEntity<Map<String, Object>> response(HttpStatus status, String message) {

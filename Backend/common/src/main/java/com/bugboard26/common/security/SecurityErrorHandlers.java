@@ -14,19 +14,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Component
-@RequiredeArgConstructor
+@RequiredArgsConstructor
 public class SecurityErrorHandlers {
     
     private final ObjectMapper objectMapper;
     
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return (request, response, authException) ->
-                write(response, HttpStatus.UNAUTHORIZED, "Autenticazione richiesta, effettua di nuovo l'accesso."); 
+                write(response, HttpStatus.UNAUTHORIZED, "Autenticazione richiesta: effettua di nuovo l'accesso."); 
     }
 
     public AccessDeniedHandler accessDeniedHandler() {
         return (request, response, authException) ->
-                write(response, HttpStatus.UNAUTHORIZED, "Non hai i permessi per questa operazione."); 
+                write(response, HttpStatus.FORBIDDEN, "Non hai i permessi per questa operazione."); 
     }
 
     private void write(HttpServletResponse response,  HttpStatus status, String message) throws IOException {

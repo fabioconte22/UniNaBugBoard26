@@ -3,6 +3,7 @@ package com.bugboard26.modules.issue.service;
 import com.bugboard26.shared.exception.InvalidImageException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,11 +20,12 @@ public class LocalFileStorageService implements FileStorageService {
 
     private static final String PUBLIC_PREFIX = "/uploads/issues/";
     
-    private final Path uploadDirectory = Paths.get("uploads/issues").toAbsolutePath().normalize();
+    private final Path uploadDirectory;
 
-    public LocalFileStorageService() {
-        try {
-            Files.createDirectories(uploadDirectory);
+    public LocalFileStorageService(@Value("${storage.uploads-dir}") String uploadsDir) {
+       this.uploadDirectory = Paths.get(uploadsDir, "issues").toAbsolutePath().normalize(); 
+       try {
+          Files.createDirectories(uploadDirectory);
         }catch(IOException e) {
             throw new IllegalArgumentException("Impossibile inizializzare la cartella di upload!", e);
         }
