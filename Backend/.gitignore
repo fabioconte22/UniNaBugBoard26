@@ -10,10 +10,9 @@ target/
 *.jar
 *.war
 
-# Configurazione locale con dati sensibili: password del database e JWT secret.
-# La regola è volutamente esatta, così un eventuale application.yml.example
-# con valori fittizi resta tracciabile e documenta le chiavi obbligatorie.
-application.yml
+# Le application.yml dei servizi sono nel repository: i valori sensibili si leggono da
+# variabili d'ambiente. Un file personale di prova (application-local.yml) resta escluso.
+application-local.yml
 
 # Allegati caricati dagli utenti a runtime
 uploads/

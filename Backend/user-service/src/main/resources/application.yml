@@ -1,0 +1,27 @@
+# user-service. Ogni valore ${NOME:predefinito} si legge dalla variabile d'ambiente NOME;
+# il predefinito va bene solo per lo sviluppo in locale. Sul cloud le password e il
+# segreto JWT arrivano dall'ambiente e non sono mai scritti qui.
+server:
+  port: ${PORT:8081}
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/bugboard26}
+    username: ${DB_USERNAME:bugboard}
+    password: ${DB_PASSWORD:secret}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+
+# Lo stesso segreto in tutti i servizi: uno firma i token, gli altri li verificano.
+jwt:
+  secret: ${JWT_SECRET:ZGV2LXNvbG8tcGVyLXN2aWx1cHBvLWxvY2FsZS1idWdib2FyZDI2LW5vbi11c2FyZS1pbi1wcm9kdXppb25l}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+app:
+  admin:
+    default-email: ${ADMIN_EMAIL:admin@bugboard26.com}
+    default-password: ${ADMIN_PASSWORD:admin-locale}

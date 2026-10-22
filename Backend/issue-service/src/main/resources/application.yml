@@ -1,0 +1,34 @@
+# issue-service. Ogni valore ${NOME:predefinito} si legge dalla variabile d'ambiente NOME;
+# il predefinito va bene solo per lo sviluppo in locale.
+server:
+  port: ${PORT:8082}
+
+spring:
+  application:
+    name: issue-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/bugboard26}
+    username: ${DB_USERNAME:bugboard}
+    password: ${DB_PASSWORD:secret}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  # Limite delle immagini allegate: il frontend controlla lo stesso valore (MAX_IMAGE_BYTES).
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 2MB
+
+# Deve essere lo stesso segreto di user-service, che firma i token.
+jwt:
+  secret: ${JWT_SECRET:ZGV2LXNvbG8tcGVyLXN2aWx1cHBvLWxvY2FsZS1idWdib2FyZDI2LW5vbi11c2FyZS1pbi1wcm9kdXppb25l}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+services:
+  # Dove raggiungere user-service per nomi e cognomi degli utenti.
+  user-service-url: ${USER_SERVICE_URL:http://localhost:8081}
+
+storage:
+  # Cartella delle immagini caricate (relativa alla cartella da cui si avvia il servizio).
+  uploads-dir: ${UPLOADS_DIR:uploads}
