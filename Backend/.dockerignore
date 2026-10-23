@@ -1,0 +1,4 @@
+# Quello che non serve per costruire le immagini.
+**/target
+**/uploads
+.DS_Store
