@@ -7,7 +7,7 @@ spring:
   application:
     name: issue-service
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5433/bugboard26}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/bugboard_issues}
     username: ${DB_USERNAME:bugboard}
     password: ${DB_PASSWORD:secret}
   jpa:
