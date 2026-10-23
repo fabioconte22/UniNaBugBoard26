@@ -1,7 +1,7 @@
 package com.bugboard26.modules.issue.service;
 
 import com.bugboard26.shared.user.UserDirectory;
-import com.bugboard26.modules.notification.service.NotificationService;
+import com.bugboard26.modules.issue.event.IssueResolvedEvent;
 import com.bugboard26.modules.issue.dto.CreateIssueRequest;
 import com.bugboard26.modules.issue.dto.IssueResponse;
 import com.bugboard26.modules.issue.model.Comment;
@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.context.ApplicationEventPublisher;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class IssueService {
     private final FileStorageService fileStorageService;
     private final UserDirectory userDirectory;
     private final CommentRepository commentRepository;
-    private final NotificationService notificationService; 
+    private final ApplicationEventPublisher eventPublisher; 
 
     public IssueResponse createIssue(CreateIssueRequest request, String creatorEmail) {
         IssuePriority priorityToSet = request.getPriority() != null ? request.getPriority() : IssuePriority.LOW;
@@ -196,7 +197,8 @@ public class IssueService {
                 .build());
 
         if (to == IssueStatus.RESOLVED) {
-            notificationService.notifyIssueResolved(saved.getId(), saved.getTitolo(), saved.getCreatorEmail(), callerEmail);
+            eventPublisher.publishEvent(
+                    new IssueResolvedEvent(saved.getId(), saved.getTitolo(), saved.getCreatorEmail(), callerEmail));
         }
         return toResponse(saved);
     }

@@ -25,11 +25,6 @@ public class GlobalExceptionHandler {
         return ApiErrors.response(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    @ExceptionHandler(NotificationNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotificationNotFound(NotificationNotFoundException ex) {
-        return ApiErrors.response(HttpStatus.NOT_FOUND, ex.getMessage()); 
-    }
-
     @ExceptionHandler(IssueAccessDeniedException.class)
     public ResponseEntity<Map<String, Object>> handleIssueAccessDenied(IssueAccessDeniedException ex) {
         return ApiErrors.response(HttpStatus.FORBIDDEN, ex.getMessage());

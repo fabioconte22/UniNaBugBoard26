@@ -24,6 +24,7 @@
         <module>common</module>
         <module>user-service</module>
         <module>issue-service</module>
+        <module>notification-service</module>
         <module>gateway</module>
     </modules>
 

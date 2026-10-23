@@ -37,6 +37,10 @@ public class Notification {
     @Column(nullable = false)
     private String actorEmail; 
 
+    private String actorNome; 
+
+    private String actorCognome; 
+
     @CreatedDate 
     @Column(nullable = false, updatable = false)
     private Instant createdAt; 
