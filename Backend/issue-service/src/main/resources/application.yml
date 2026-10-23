@@ -19,6 +19,14 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 2MB
+  # RabbitMQ, dove si pubblica l'evento "issue risolta".
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:bugboard}
+    password: ${RABBITMQ_PASSWORD:secret}
+    # Se RabbitMQ è spento la risoluzione non deve restare appesa: si rinuncia presto.
+    connection-timeout: 5s
 
 # Deve essere lo stesso segreto di user-service, che firma i token.
 jwt:

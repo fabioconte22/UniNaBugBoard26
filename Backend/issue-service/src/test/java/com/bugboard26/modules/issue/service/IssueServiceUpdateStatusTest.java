@@ -9,7 +9,7 @@ import com.bugboard26.modules.issue.model.IssueStatus;
 import com.bugboard26.modules.issue.model.IssueType;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
-import com.bugboard26.modules.notification.service.NotificationService;
+import com.bugboard26.modules.issue.event.IssueResolvedEvent;
 import com.bugboard26.shared.user.UserDirectory;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
 import com.bugboard26.shared.exception.InvalidStatusTransitionException;
@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -28,7 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -53,7 +53,7 @@ class IssueServiceUpdateStatusTest {
     @Mock
     private CommentRepository commentRepository;
     @Mock
-    private NotificationService notificationService;
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private IssueService issueService; 
@@ -160,7 +160,7 @@ class IssueServiceUpdateStatusTest {
         assertThat(response.getStatus()).isEqualTo(IssueStatus.IN_PROGRESS); 
         assertThat(issue.getAssigneeEmail()).isEqualTo(OTHER); 
         assertHistoryEntry(IssueStatus.TODO, IssueStatus.IN_PROGRESS, OTHER, ""); 
-        verifyNoInteractions(notificationService); 
+        verifyNoInteractions(eventPublisher); 
     }
 
     @Test 
@@ -173,7 +173,7 @@ class IssueServiceUpdateStatusTest {
         assertThat(response.getStatus()).isEqualTo(IssueStatus.IN_PROGRESS);
         assertThat(issue.getAssigneeEmail()).isEqualTo(ASSIGNEE);
         assertHistoryEntry(IssueStatus.TODO, IssueStatus.IN_PROGRESS, ASSIGNEE, "");
-        verifyNoInteractions(notificationService);
+        verifyNoInteractions(eventPublisher);
     }
 
     @Test 
@@ -186,7 +186,7 @@ class IssueServiceUpdateStatusTest {
         assertThat(response.getStatus()).isEqualTo(IssueStatus.IN_PROGRESS);
         assertThat(issue.getAssigneeEmail()).isEqualTo(ASSIGNEE);
         assertHistoryEntry(IssueStatus.TODO, IssueStatus.IN_PROGRESS, ASSIGNEE, "");
-        verifyNoInteractions(notificationService);
+        verifyNoInteractions(eventPublisher);
     }
 
     @Test
@@ -199,7 +199,7 @@ class IssueServiceUpdateStatusTest {
         assertThat(response.getStatus()).isEqualTo(IssueStatus.RESOLVED);
         assertHistoryEntry(IssueStatus.IN_PROGRESS, IssueStatus.RESOLVED, ASSIGNEE, "Corretto il login");
     
-        verify(notificationService).notifyIssueResolved(ISSUE_ID, "Bug di prova", REPORTER, ASSIGNEE);
+        verify(eventPublisher).publishEvent(new IssueResolvedEvent(ISSUE_ID, "Bug di prova", REPORTER, ASSIGNEE));
     }
 
     @Test
@@ -211,7 +211,7 @@ class IssueServiceUpdateStatusTest {
 
         assertThat(response.getStatus()).isEqualTo(IssueStatus.CLOSED);
         assertHistoryEntry(IssueStatus.RESOLVED, IssueStatus.CLOSED, ADMIN, "");
-        verifyNoInteractions(notificationService);
+        verifyNoInteractions(eventPublisher);
     } 
 
     @Test
@@ -225,7 +225,7 @@ class IssueServiceUpdateStatusTest {
         
         assertThat(issue.getAssigneeEmail()).isEqualTo(ASSIGNEE);
         assertHistoryEntry(IssueStatus.RESOLVED, IssueStatus.IN_PROGRESS, ADMIN, "Il bug si ripresenta");
-        verifyNoInteractions(notificationService);
+        verifyNoInteractions(eventPublisher);
     }
 
     // --- Metodi di supporto 
@@ -263,7 +263,7 @@ class IssueServiceUpdateStatusTest {
     private void assertNothingSaved() {
         verify(issueRepository, never()).save(any());
         verify(commentRepository, never()).save(any());
-        verify(notificationService, never()).notifyIssueResolved(anyString(), anyString(), anyString(), anyString());
+        verifyNoInteractions(eventPublisher);
     }
 
 

@@ -12,5 +12,16 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # Coda dei messaggi fra i servizi (evento "issue risolta"). Pannello web: http://localhost:15672
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: bugboard26_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: bugboard
+      RABBITMQ_DEFAULT_PASS: secret
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
 volumes:
   postgres_data:

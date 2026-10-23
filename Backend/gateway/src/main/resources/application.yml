@@ -24,5 +24,9 @@ spring:
         - id: issue-service
           uri: ${ISSUE_SERVICE_URL:http://localhost:8082}
           predicates:
-            - Path=/api/issue/**,/api/notifications/**,/uploads/**
+            - Path=/api/issue/**,/uploads/**
+        - id: notification-service
+          uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/notifications/**
       # /api/users/** (usato tra i servizi) non ha una rotta: dall'esterno non si raggiunge.

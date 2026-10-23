@@ -7,7 +7,7 @@ import com.bugboard26.modules.issue.model.IssueStatus;
 import com.bugboard26.modules.issue.model.IssueType;
 import com.bugboard26.modules.issue.repository.CommentRepository;
 import com.bugboard26.modules.issue.repository.IssueRepository;
-import com.bugboard26.modules.notification.service.NotificationService;
+import org.springframework.context.ApplicationEventPublisher;
 import com.bugboard26.shared.user.UserDirectory;
 import com.bugboard26.shared.exception.InvalidFilterParameterException;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class IssueServiceFilterTest {
             mock(FileStorageService.class),
             mock(UserDirectory.class),
             commentRepository, 
-            mock(NotificationService.class)); 
+            mock(ApplicationEventPublisher.class)); 
         
         List<Issue> issues = new ArrayList<>(); 
         for (IssueStatus status : IssueStatus.values()) {

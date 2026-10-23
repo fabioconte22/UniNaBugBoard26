@@ -12,7 +12,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <!-- Issue, commenti, workflow degli stati, statistiche, immagini e (per ora) notifiche -->
+    <!-- Issue, commenti, workflow degli stati, statistiche, immagini; pubblica l'evento "issue risolta" -->
     <artifactId>issue-service</artifactId>
 
     <dependencies>
@@ -35,6 +35,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- RabbitMQ: qui si pubblica l'evento "issue risolta" -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
