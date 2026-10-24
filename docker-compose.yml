@@ -122,6 +122,10 @@ services:
       USER_SERVICE_URL: http://user-service:8081
       ISSUE_SERVICE_URL: http://issue-service:8082
       NOTIFICATION_SERVICE_URL: http://notification-service:8083
+      # L'indirizzo da cui il browser apre l'app. Dietro CloudFront la pagina è https://…cloudfront.net
+      # ma la richiesta arriva al gateway in http: il gateway la considera di un'altra origine e,
+      # se l'indirizzo non è fra questi, risponde 403. Sul server si imposta nel .env.
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:4200}
     depends_on:
       - user-service
       - issue-service
