@@ -52,7 +52,7 @@ public class CommentService {
         
         return comments.stream()
                 .map(comment -> toResponse(comment, authors))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private CommentResponse toResponse(Comment comment, Map<String, UserSummary> authors) {
