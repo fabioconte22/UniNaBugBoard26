@@ -13,6 +13,7 @@ services:
   db:
     image: postgres:16-alpine
     container_name: bugboard26_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: bugboard26
       POSTGRES_USER: bugboard
@@ -34,6 +35,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     container_name: bugboard26_rabbitmq
+    restart: unless-stopped
     environment:
       RABBITMQ_DEFAULT_USER: bugboard
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-secret}
