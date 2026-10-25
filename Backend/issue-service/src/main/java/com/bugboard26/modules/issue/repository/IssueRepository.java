@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import com.bugboard26.modules.issue.model.Issue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.Collection;

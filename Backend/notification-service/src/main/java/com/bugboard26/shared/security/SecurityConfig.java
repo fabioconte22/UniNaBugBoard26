@@ -19,6 +19,10 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter; 
     private final SecurityErrorHandlers securityErrorHandlers; 
 
+    // CSRF disattivato di proposito (regola Sonar java:S4502): l'API è senza stato e il token JWT
+    // viaggia nell'intestazione Authorization, non in un cookie. Il browser non lo allega da solo
+    // alle richieste partite da altri siti, quindi l'attacco CSRF qui non è possibile.
+    @SuppressWarnings("java:S4502")
     @Bean 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

@@ -62,7 +62,7 @@ public class IssueStatsService {
     private List<WeekTrend> lastWeeks() {
         LocalDate firstWeek = LocalDate.now(ZONE)
             .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-            .minusWeeks(WEEKS - 1); 
+            .minusWeeks(WEEKS - 1L); 
         Instant since = firstWeek.atStartOfDay(ZONE).toInstant(); 
 
         long[] created = countPerWeek(issueRepository.findCreationTimesSince(since), firstWeek);

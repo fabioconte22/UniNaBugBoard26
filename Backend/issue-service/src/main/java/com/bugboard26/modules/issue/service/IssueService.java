@@ -27,7 +27,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +58,7 @@ public class IssueService {
         return issueRepository.findByCreatorEmail(creatorEmail)
             .stream()
             .map(this::toResponse)
-            . collect(Collectors.toList());
+            .toList();
     }
 
     public IssueResponse getIssueById(String issueId) {
@@ -147,10 +146,14 @@ public class IssueService {
         return issueRepository.findByAssigneeEmail(assigneeEmail)
                                 .stream()
                                 .map(this::toResponse)
-                                .collect(Collectors.toList());
+                                .toList();
 
     }
 
+    // Complessità cognitiva sopra la soglia di Sonar (java:S3776), lasciata di proposito: il metodo
+    // segue una per una le regole del workflow degli stati, e i test White-Box sono costruiti sui
+    // cammini di questo grafo di controllo.
+    @SuppressWarnings("java:S3776")
     @Transactional
     public IssueResponse updateStatus(String issueId, String statusStr, String note,
                                       String callerEmail, boolean callerIsAdmin) {
