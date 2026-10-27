@@ -56,7 +56,9 @@ class AuthServiceChangePasswordTest {
     void changePassword_userNotFound_throwsNotFound() {
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.empty()); 
 
-        assertThatThrownBy(() -> authService.changePassword(EMAIL, request(CURRENT, NEW)))
+        ChangePasswordRequest body = request(CURRENT, NEW); 
+
+        assertThatThrownBy(() -> authService.changePassword(EMAIL, body))
                 .isInstanceOf(UserNotFoundException.class); 
         verify(userRepository, never()).save(any()); 
     }
@@ -67,7 +69,9 @@ class AuthServiceChangePasswordTest {
     void changePassword_wrongCurrentPassword_throwsInvalidChange() {
         givenUser(); 
 
-        assertThatThrownBy(() -> authService.changePassword(EMAIL, request("Sbagliata789", NEW)))
+        ChangePasswordRequest body = request("Sbagliata789", NEW); 
+
+        assertThatThrownBy(() -> authService.changePassword(EMAIL, body))
                 .isInstanceOf(InvalidPasswordChangeException.class)
                 .hasMessageContaining("attuale non è corretta"); 
         verify(userRepository, never()).save(any()); 
@@ -79,7 +83,9 @@ class AuthServiceChangePasswordTest {
     void changePassword_newEqualsCurrent_throwsInvalidChange() {
         givenUser(); 
 
-        assertThatThrownBy(() -> authService.changePassword(EMAIL, request(CURRENT, CURRENT)))
+        ChangePasswordRequest body = request(CURRENT, CURRENT); 
+
+        assertThatThrownBy(() -> authService.changePassword(EMAIL, body))
                 .isInstanceOf(InvalidPasswordChangeException.class)
                 .hasMessageContaining("La nuova password deve essere diversa da quella attuale"); 
         verify(userRepository, never()).save(any()); 
